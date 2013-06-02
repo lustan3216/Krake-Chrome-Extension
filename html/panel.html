@@ -1,0 +1,256 @@
+<!--
+  Copyright 2013 Krake Pte Ltd.
+
+  This program is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later
+  version.
+
+  This program is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+  FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along with
+  this program. If not, see <http://www.gnu.org/licenses/>.
+
+  Author:
+  Joseph Yang <sirjosephyang@krake.io>
+-->
+
+<style>
+
+#panel
+{
+  position: fixed;
+  height: 200px;
+  bottom: 0; 
+  left: 0;
+  z-index: 9999;
+  background: #F2F2F2;
+  width: 100%;
+  margin: 0;
+  padding: 2px;
+
+  font-family: Tahoma,Helvetica,sans-serif;
+}
+
+#panel-top-control
+{
+  width: 100%;
+  height: 15px;
+/*  background: #eee; */
+
+}
+
+#panel-left
+{
+  padding-top: 10px;
+  float: left;	
+  width: 200px;
+  height: 190px;
+  z-index: 9999;
+  background-color: #eee;
+}
+
+.k_btn
+{
+
+  background:#ededed;
+  background:-moz-linear-gradient(top,#ededed 0%,#dfdfdf 100%);
+  background:-webkit-gradient(linear,left top,left bottom,color-stop(0%,#ededed),color-stop(100%,#dfdfdf));
+  background:-webkit-linear-gradient(top,#ededed 0%,#dfdfdf 100%);
+  background:-o-linear-gradient(top,#ededed 0%,#dfdfdf 100%);
+  background:-ms-linear-gradient(top,#ededed 0%,#dfdfdf 100%);
+  background:linear-gradient(top,#ededed 0%,#dfdfdf 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed',endColorstr='#dfdfdf',GradientType=0);
+  border-radius:12px;
+  width: 190px;
+  height: 30px;
+ /* margin: 1px 5px; */
+  margin: 2px 5px;
+}
+
+
+#btn-done
+{
+  background: #333;
+  color: #f9f9f9;
+}
+
+
+.k_blank-row
+{
+  width: 100%;
+  height: 10px;
+}
+
+#panel-right
+{
+
+  width: calc(100% - 200px);
+  height: 185px;
+  overflow: auto;
+  white-space: nowrap;
+  z-index: 9999;
+  background-color: #333;
+}
+
+#inner-wrapper 
+{
+  float: left;
+  margin-right: -30000px;
+  /*Be safe with Opera's limited negative margin of 32695px (-999em could cause problems with large font sizes)*/
+  padding-left:2px;
+}
+
+
+.krake-column
+{
+  height: 165px;
+  width: 200px;
+  border: 1px solid #000000;
+  background-color: white; 
+ /* margin: 1px; */
+  float: left;
+  z-index: 10001;
+  font: 12px;
+}
+
+.krake-column-control
+{
+  width: 198px;
+  height: 20px;
+  z-index: 10001;
+  background-color: white;
+}
+
+.krake-column-row 
+{
+  width: 190px;
+  height: 25px;	
+  z-index: 10001;
+  margin-top: 1px;
+  background-color: white;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  overflow-y: scroll;
+  border-bottom:1px solid #000000;
+  font-size: 12px; 
+  font-family: Tahoma,Helvetica,sans-serif;
+}
+
+
+.krake-breadcrumb
+{
+  font-size: 9px;
+  width: 160px;
+  z-index: 10001;
+  margin-top: 1px;
+  background-color: white;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 12px;
+  overflow-y: scroll;
+}
+
+.krake-column-title
+{
+  font-weight: bold;
+  font-size: 16px;
+}
+
+
+
+/* Linear ------------------------- */
+
+.metal.linear {
+ /* width: 100px;
+  font-size: 4em;
+  height: 80px; 
+  border-radius: .5em; */
+  background-image: -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0)   6%, hsla(0,0%,100%, .1) 7.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,  0%,0) 0%, hsla(0,0%,  0%,0)   4%, hsla(0,0%,  0%,.03) 4.5%),
+    -webkit-repeating-linear-gradient(left, hsla(0,0%,100%,0) 0%, hsla(0,0%,100%,0) 1.2%, hsla(0,0%,100%,.15) 2.2%),
+    
+    linear-gradient(180deg, hsl(0,0%,78%)  0%, 
+    hsl(0,0%,90%) 47%, 
+    hsl(0,0%,78%) 53%,
+    hsl(0,0%,70%)100%);
+}
+
+
+/* active ------------------------- */
+
+.metal:active {
+  color: hsl(210, 100%, 40%);
+  text-shadow: hsla(210,100%,20%,.3) 0 -1px 0, hsl(210,100%,85%) 0 2px 1px, hsla(200,100%,80%,1) 0 0 5px, hsla(210,100%,50%,.6) 0 0 20px;
+  box-shadow: 
+    inset hsla(210,100%,30%,  1) 0  0px 0px 4px, /* border */
+    inset hsla(210,100%,15%, .4) 0 -1px 5px 4px, /* soft SD */
+    inset hsla(210,100%,20%,.25) 0 -1px 0px 7px, /* bottom SD */
+    inset hsla(210,100%,100%,.7) 0  2px 1px 7px, /* top HL */
+    
+    hsla(210,100%,75%, .8) 0  0px 3px 2px, /* outer SD */
+    hsla(210,50%,40%, .25) 0 -5px 6px 4px, /* outer SD */
+    hsla(210,80%,95%,   1) 0  5px 6px 4px; /* outer HL */
+}
+
+.krake-control-button
+{
+  background-color: white;
+  
+  background-size: 18px 18px;
+  background-repeat:no-repeat;
+  float:right;
+  min-width:20px;
+  min-height:20px;
+  margin: 0px;
+  border: none;
+}
+
+.krake-control-button-delete
+{
+  background-size:  19px 19px;
+  background-position:center; 
+}
+
+.krake-control-button-link
+{
+  margin-left: 5px;
+  margin-top: 1px;
+  float: left;
+  background-size: 17px 17px;
+  background-position:center; 
+}
+
+.krake-selection-3
+{
+  height: 28px;
+}
+
+</style>
+
+<div id="panel" class="k_panel">
+  <div id="panel-top-control" class="k_panel metal linear"></div>
+  <div id="panel-left" class="k_panel  metal linear">
+    <button type="button" class="k_btn k_panel metal linear" id="btn-create-list">Make a list of items</button>
+    <button type="button" class="k_btn k_panel metal linear" id="btn-select-single">Select single item</button>
+   <!-- 
+   <button type="button" class="k_btn k_panel metal linear" id="btn-edit-pagination">Edit pagination</button>
+ -->
+    
+    <br/>
+    <div class="k_blank-row k_panel"></div>
+    <div class="k_blank-row k_panel"></div>
+    <button type="button" class="k_btn k_panel" id="btn-done">Done </button>
+  </div>
+
+  <div id="panel-right" class="k_panel">
+  	<div id="inner-wrapper" class="k_panel"></div>
+  </div>
+  
+</div>
+
+  
