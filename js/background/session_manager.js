@@ -35,30 +35,29 @@ var SessionManager = function(){
   this.states = {
     'idle': {
 	  'before': undefined,
-	  'after': 'ready_for_selection',
+	  'after': 'pre_selection_1',
 	  'post_transition_event': undefined 
 	},
-	'ready_for_selection': {
-	  'before': 'idle',
-	  'after': 'first_column_selected',
-	  'post_transition_event': undefined 
-	},
-	'first_column_selected': {
-	  'before': 'ready_for_selection',
-	  'after': 'second_column_selected',
-	  'post_transition_event': undefined 
-	},
-	'second_column_selected': {
-	  'before': 'first_column_selected',
-	  'after': 'idle',
-	  'post_transition_event': undefined 
-	},
-	'ready_for_pagination_selection': {
-	  'before': 'second_column_selected',
-	  'after': 'idle',
-	  'post_transition_event': undefined 
-	}
-  };//eo states
+  'pre_selection_1': {
+    'before': 'idle',
+    'after': 'post_selection_1',
+    'post_transition_event': undefined 
+  },
+  'post_selection_1': {
+    'before': 'idle',
+    'after': 'pre_selection_2',
+    'post_transition_event': undefined 
+  },
+  'pre_selection_2': {
+    'before': 'idle',
+    'after': 'post_selection_2',
+    'post_transition_event': undefined 
+  },
+  'post_selection_2': {
+    'before': 'idle',
+    'after': 'idle',
+    'post_transition_event': undefined 
+  }
 };
 
 SessionManager.prototype.setInitialState = function(state){

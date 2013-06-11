@@ -327,8 +327,33 @@ var UIElementSelector = {
   },
   
   selectElement : function(e){
-    return false;
+    e.preventDefault();
+    e.stopPropagation();
+
+    if ($(e.target).is('.k_panel')) return;
+  
+    var elementPathResults = KrakeHelper.getElementXPath(this); //[nodeName, xpath, link];
+    //console.log(elementPathResults);
+    chrome.extension.sendMessage({ action: "get_session"}, function(response){
+      var sessionManager = response.session;
+      
+      switch(sessionManager.currentState){
+        case '':
+
+        break;
+
+        case '':
+
+        break;
+      }//eo switch
+    });
+
   },
+  
+  selectNextPager : function(e){
+    e.preventDefault();
+  },
+  
 
   attachElementHighlightListeners : function(){   
     $('*').bind('mouseover', UIElementSelector.mouseOver);

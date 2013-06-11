@@ -46,7 +46,8 @@ var showPanel = function(){
     var panelWrapper = $('#k-panel-wrapper');
 
     panelWrapper.load(chrome.extension.getURL("html/panel.html"),function(){
-        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } });       
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } });   
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake_helper.js" } });       
       }); 
   }//eo if
   
