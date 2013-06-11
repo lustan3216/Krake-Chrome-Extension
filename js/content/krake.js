@@ -17,9 +17,7 @@
   Joseph Yang <sirjosephyang@krake.io>
 */
 
-var generateColumnId = function(){
-  return Math.floor( Math.random() * 10000000000 );
-}//
+
 /***************************************************************************/
 /************************** UI Column Factory  *****************************/
 /***************************************************************************/
@@ -211,84 +209,147 @@ var UIColumnFactory = {
 /***************************************************************************/
 /******************************  Panel UI  *********************************/
 /***************************************************************************/
-var uiBtnCreateList = $("#btn-create-list");
-var uiBtnSelectSingle = $("#btn-select-single");
-var uiBtnEditPagination = $("#btn-edit-pagination");
-var uiBtnDone = $("#btn-done");
-var uiPanelWrapper = $("#inner-wrapper"); 
+var Panel = {
+  uiBtnCreateList : $("#btn-create-list"),
+  uiBtnSelectSingle : $("#btn-select-single"),
+  uiBtnEditPagination : $("#btn-edit-pagination"),
+  uiBtnDone : $("#btn-done"),
+  uiPanelWrapper : $("#inner-wrapper"),
 
+  generateColumnId : function(){
+   return Math.floor( Math.random() * 10000000000 );
+  },
 
+  init : function(){
+    Panel.uiBtnCreateList.bind('click', Panel.uiBtnCreateListClick);
+    Panel.uiBtnSelectSingle.bind('click', Panel.uiBtnSelectSingleClick);
+    Panel.uiBtnEditPagination.bind('click', Panel.uiBtnEditPaginationClick);
+    Panel.uiBtnDone.bind('click', Panel.uiBtnDoneClick);
+  },
+  
+  uiBtnCreateListClick : function(){
+    chrome.extension.sendMessage({ action: "get_session"}, function(response){
+      var sessionManager = response.session;
 
-var Panel = function(){
-   
-};//eo Panel
+      if(sessionManager.currentState != 'idle'){
+        alert("You must finish editing the previous column");
+      }else{
+        var newColumnId = Panel.generateColumnId();
+        var params = {};
+        params.columnId = newColumnId;
+        params.columnType = 'list';
+        params.url = document.URL;
 
-Panel.prototype.init = function(){
-  uiBtnCreateList.bind('click', uiBtnCreateListClick);
-  uiBtnSelectSingle.bind('click', uiBtnSelectSingleClick);
-  uiBtnEditPagination.bind('click', uiBtnEditPaginationClick);
-  uiBtnDone.bind('click', uiBtnDoneClick);
-};
+        chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
+          //only add UIColumn to panel once a logical column object is created in sessionManager
+          if(response.status == 'success'){
+            Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
+            Panel.attachEnterKeyEventToColumnTitle(newColumnId);
+          }else{
+            //show warning to user
+          }//eo if-else
+        });
+      }//eo if-else 
+    });
+  },
+  
+  uiBtnSelectSingleClick : function(){
+    chrome.extension.sendMessage({ action: "get_session"}, function(response){
+      var sessionManager = response.session;
 
+      if(sessionManager.currentState != 'idle'){
+        alert("You must finish editing the previous column");
+      }else{
+        var newColumnId = Panel.generateColumnId();
+        var params = {};
+        params.columnId = newColumnId;
+        params.columnType = 'single';
+        params.url = document.URL;
 
-var uiBtnCreateListClick = function(e){
-  //add ui column
-  chrome.extension.sendMessage({ action: "get_session"}, function(response){
-    var sessionManager = response.session;
-
-    if(sessionManager.currentState != 'idle'){
-      alert("You must finish editing the previous column");
-    }else{
-      var newColumnId = generateColumnId();
-      var params = {};
-      params.columnId = newColumnId;
-      params.columnType = 'list';
-      params.url = document.URL;
-
-      chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
-        //only add UIColumn to panel once a logical column object is created in sessionManager
-        //console.log( JSON.stringify(response) );
-        if(response.status == 'success'){
-          uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
-          attachEnterKeyEventToColumnTitle(newColumnId);
-        }else{
-          //show warning to user
-        }//eo if-else
-
-      });
-    }
+        chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
+          //only add UIColumn to panel once a logical column object is created in sessionManager
+          if(response.status == 'success'){
+            Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', newColumnId));
+            Panel.attachEnterKeyEventToColumnTitle(newColumnId);
+          }else{
+            //show warning to user
+          }//eo if-else
+        });
+      }//eo if-else 
+    });
     
-  });
+  },
 
-  //add breadcrumb for ui column
+  uiBtnEditPaginationClick : function(){
+    console.log("uiBtnEditPaginationClick");
+  },
 
-  //add logical column in sharedKrake
+  uiBtnDoneClick : function(){
+    console.log("uiBtnDoneClick");
+  },
 
-}; 
+  attachEnterKeyEventToColumnTitle : function(columnId){
+    var identifier = "#krake-column-title-" + columnId;
+    $(identifier).keydown(function(e) {
+      if(e.which == 13) {
+        //update breadcrumb segment title
+        var newColumnTitle = $(identifier).text();
+        //self.updateBreadcrumbSegmentTitle(columnId, $.trim(newColumnTitle));     
+        $(this).blur().next().focus();  return false;
+      }
+    }); 
+  }
 
-var uiBtnSelectSingleClick = function(e){
-  uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', generateColumnId()));
-}; 
+};//eo Panel
+ 
 
-var uiBtnEditPaginationClick = function(e){
-  console.log("uiBtnEditPaginationClick");
-};
+/***************************************************************************/
+/************************  UIElementSelector  ******************************/
+/***************************************************************************/
+var UIElementSelector = {
+  init : function(){
+    UIElementSelector.attachElementHighlightListeners();
+    console.log("UIElementSelector.init");
+  },
 
-var uiBtnDoneClick = function(e){
-  console.log("uiBtnDoneClick");
-};
+  mouseOut : function(e){
+    this.style.outline = '';
+    return false;
+  },
 
-var attachEnterKeyEventToColumnTitle = function(columnId){
-  var identifier = "#krake-column-title-" + columnId;
-  $(identifier).keydown(function(e) {
-    if(e.which == 13) {
-      //update breadcrumb segment title
-      var newColumnTitle = $(identifier).text();
-      //self.updateBreadcrumbSegmentTitle(columnId, $.trim(newColumnTitle));     
-      $(this).blur().next().focus();  return false;
+  mouseOver : function(e){
+    if ($(e.target).is('.k_panel')) return;
+    
+    if (this.tagName != 'body'){
+      this.style.outline = '4px solid #0000A0'; 
     }
-  });    
-};//eo attachEnterKeyEventToColumnTitle
+    return false; //preventDefault & stopPropogation
+  },
+  
+  selectElement : function(e){
+    return false;
+  },
+
+  attachElementHighlightListeners : function(){   
+    $('*').bind('mouseover', UIElementSelector.mouseOver);
+    $('*').bind('mouseout', UIElementSelector.mouseOut);
+    $('*').bind('click', UIElementSelector.selectElement);
+  },
+
+  detachElementHighlightListeners : function(){
+    $('*').unbind('mouseover', UIElementSelector.mouseOver);
+    $('*').unbind('mouseout', UIElementSelector.mouseOut);
+    $('*').unbind('click', UIElementSelector.selectElement);
+  }
+
+};//eo UIElementSelector
+
+
+
+
+
+
+
 
 
 

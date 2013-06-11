@@ -19,8 +19,8 @@ chrome.extension.onMessage.addListener(
       case "load_script_done":
         console.log("load_script_done := " + request.params.filename);
         if(request.params.filename == "js/content/krake.js"){
-          panel = new Panel();
-          panel.init();
+          Panel.init();
+          UIElementSelector.init();
         }//eo if
       break;
 
