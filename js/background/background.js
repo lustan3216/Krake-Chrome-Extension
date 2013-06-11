@@ -27,6 +27,10 @@ chrome.runtime.onMessage.addListener(
       case "delete_column":
         deleteColumn(request.params, sendResponse);
       break;
+
+      case 'edit_current_column':
+        alert('edit_current_column');
+      break;
     }//eo switch
   });
 

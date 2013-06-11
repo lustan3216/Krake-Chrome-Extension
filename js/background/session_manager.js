@@ -34,30 +34,31 @@ var SessionManager = function(){
 
   this.states = {
     'idle': {
-	  'before': undefined,
-	  'after': 'pre_selection_1',
-	  'post_transition_event': undefined 
-	},
-  'pre_selection_1': {
-    'before': 'idle',
-    'after': 'post_selection_1',
-    'post_transition_event': undefined 
-  },
-  'post_selection_1': {
-    'before': 'idle',
-    'after': 'pre_selection_2',
-    'post_transition_event': undefined 
-  },
-  'pre_selection_2': {
-    'before': 'idle',
-    'after': 'post_selection_2',
-    'post_transition_event': undefined 
-  },
-  'post_selection_2': {
-    'before': 'idle',
-    'after': 'idle',
-    'post_transition_event': undefined 
-  }
+	    'before': undefined,
+	    'after': 'pre_selection_1',
+	    'post_transition_event': undefined 
+	  },
+    'pre_selection_1': {
+      'before': 'idle',
+      'after': 'post_selection_1',
+      'post_transition_event': undefined 
+    },
+    'post_selection_1': {
+      'before': 'pre_selection_1',
+      'after': 'pre_selection_2',
+      'post_transition_event': undefined 
+    },
+    'pre_selection_2': {
+      'before': 'post_selection_1',
+      'after': 'post_selection_2',
+      'post_transition_event': undefined 
+    },
+    'post_selection_2': {
+      'before': 'pre_selection_2',
+      'after': 'idle',
+      'post_transition_event': undefined 
+    }
+  };//eo states
 };
 
 SessionManager.prototype.setInitialState = function(state){
