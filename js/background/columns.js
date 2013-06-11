@@ -100,7 +100,7 @@ ColorGenerator.prototype.getColor = function()
 }
 
 
-
+/*
 module.exports = Column;
 module.exports = ColumnFactory;
 
@@ -118,6 +118,6 @@ if(!module.parent) {
   
 }
 
-
+*/
 
 

@@ -150,7 +150,6 @@ var UIColumnFactory = {
 
   createUIColumn: function(type, columnId)
   {
-    console.log("createColumn");
     var divKrakeColumnId = "krake-column-" + columnId;
     var columnTitleId = "krake-column-title-" + columnId;
 
@@ -213,10 +212,7 @@ var uiBtnEditPagination = $("#btn-edit-pagination");
 var uiBtnDone = $("#btn-done");
 var uiPanelWrapper = $("#inner-wrapper"); 
 
-//uiBtnCreateList.bind('click', function(e){ alert("gangangan"); });
-var sayFuck = function(e){
-  alert("fuck you la");
-};
+
 
 var Panel = function(){
    
@@ -230,12 +226,35 @@ Panel.prototype.init = function(){
 };
 
 
-
 var uiBtnCreateListClick = function(e){
   //add ui column
-  var columnId = generateColumnId();
-  uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', columnId));
-  attachEnterKeyEventToColumnTitle(columnId);
+  chrome.extension.sendMessage({ action: "get_session"}, function(response){
+    var sessionManager = response.session;
+
+    if(sessionManager.currentState != 'idle'){
+      alert("You must finish editing the previous column");
+    }else{
+      var newColumnId = generateColumnId();
+      var params = {};
+      params.columnId = newColumnId;
+      params.columnType = 'list';
+      params.url = document.URL;
+
+      chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
+        //only add UIColumn to panel once a logical column object is created in sessionManager
+        //console.log( JSON.stringify(response) );
+        if(response.status == 'success'){
+          uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
+          attachEnterKeyEventToColumnTitle(newColumnId);
+        }else{
+          //show warning to user
+        }//eo if-else
+        
+      });
+    }
+    
+  });
+
   //add breadcrumb for ui column
 
   //add logical column in sharedKrake
@@ -243,8 +262,7 @@ var uiBtnCreateListClick = function(e){
 }; 
 
 var uiBtnSelectSingleClick = function(e){
-  var columnId = generateColumnId();
-  uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', columnId));
+  uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', generateColumnId()));
 }; 
 
 var uiBtnEditPaginationClick = function(e){

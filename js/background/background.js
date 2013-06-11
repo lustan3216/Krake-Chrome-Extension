@@ -1,12 +1,6 @@
 var isActive = false;
-
-var sharedKrake = 
-{
-  originUrl : null,
-  destinationUrl : null,
-  columns : []
-};
-
+var sessionManager = null;
+var sharedKrake = null;
 
 /***************************************************************************/
 /*********************  Incoming Request Handler  **************************/
@@ -23,7 +17,11 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case "get_session":
-        sendResponse({ action: "get_session_done", params: { session: sessionManager } });
+        sendResponse({ session: sessionManager });
+      break;
+
+      case "add_column":
+        addColumn(request.params, sendResponse);
       break;
     }//eo switch
   });
@@ -36,12 +34,14 @@ var handleIconClick = function handleIconClick(tab){
      disableKrake();
      updateBrowserActionIcon();
      isActive = false;
-     //clearCache();
+     clearCache();
 
    }else{
      enableKrake();
      updateBrowserActionIcon();
      isActive = true;
+     sessionManager = new SessionManager();
+     sharedKrake = SharedKrake.getInstance();
    }
 
 };//eo handleIconClick
@@ -70,6 +70,16 @@ var disableKrake = function(){
   });  
 };//eo disableKrake
 
+var clearCache = function(){
+  var sharedKrake = null;
+  var sessionManager = null;
+};
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+    //re-render panel using columns objects from storage if any. 
+});
+
 var loadScript = function(filename){
   chrome.tabs.getSelected(null, function(tab) {
     chrome.tabs.executeScript(tab.id, {file: filename}, function(){
@@ -80,23 +90,28 @@ var loadScript = function(filename){
   });
 };//eo loadScript
 
+var addColumn = function(params, callback){
+  try{
+    console.log('-- before "addColumn"');
+    console.log( JSON.stringify(sessionManager) );
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-    //re-render panel using columns objects from storage if any. 
-});
+    sessionManager.currentColumn = ColumnFactory.createColumn(params);
+    sessionManager.goToNextState();
+
+    console.log('-- after "addColumn"');
+    console.log( JSON.stringify(sessionManager) );
+       
+    if (callback && typeof(callback) === "function")  callback({status: 'success'});  
+  }catch(err){
+    concole.log("err");
+    if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
+  }
+  
+};
 
 
 
-var column = ColumnFactory.createColumn({
-  columnId: 1,
-  columnType: 'list',
-  url: "http://localhost"
-});
-console.log(JSON.stringify(column) );
 
-for(var key in column){
-  console.log("key:= " + key + ", value:= " + column[key]);
-}
 
 
 

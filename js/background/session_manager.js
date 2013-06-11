@@ -84,6 +84,44 @@ SessionManager.prototype.goToNextState = function(){
 };
 
 
+/***************************************************************************/
+/************************  SharedKrake Object   ****************************/
+/***************************************************************************/
+
+var SharedKrake = (function(){
+  var instance = null;
+
+  function init(){
+    return {
+      originUrl: null,
+      destinationUrl: null,
+      columns: []
+    }; 
+  };//eo init
+
+  return{
+    getInstance: function(){
+      if(!instance){
+        instance = init();
+      }
+      return instance;
+    }
+  };
+})();
+
+/*
+module.exports = SharedKrake;
+
+if(!module.parent) {
+  var krake1 = SharedKrake.getInstance();
+  krake1.originalUrl = "http://save_the_world";
+  console.log("krake1.url := " + krake1.originalUrl);
+  
+  var krake2 = SharedKrake.getInstance();
+  console.log("krake2.url := " + krake2.originalUrl);
+};
+*/
+
 /*
 module.exports = SessionManager;
 
@@ -91,6 +129,7 @@ module.exports = SessionManager;
 //    node tsp_test.js
 if(!module.parent) {
   var sessionManager =  new SessionManager();
+  console.log("initial state := " + sessionManager.currentState);
   sessionManager.setInitialState('first_column_selected');
   console.log(sessionManager.currentState);
   sessionManager.setEventForState('first_column_selected', function(){ console.log("hello world!"); });
