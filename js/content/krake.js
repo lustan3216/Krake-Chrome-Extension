@@ -128,16 +128,14 @@ var UIColumnFactory = {
                                        class: "krake-column-row krake-selection-3 k_panel" });
 
 
-    $deleteButton.click(
-      function()
-      {
-        var columnIdentifier = "#krake-column-" + columnId; 
-        $(columnIdentifier).remove();
-        chrome.extension.sendMessage({ name: "remove_column",
-                                       params: { columnId: columnId } 
-                                      });
-      }
-    );
+    $deleteButton.bind('click', function(){
+      var columnIdentifier = "#krake-column-" + columnId; 
+      chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
+        if(response.status == 'success'){
+          $(columnIdentifier).remove();
+        }   
+      });
+    });
 
     $columnControl = $columnControl.append($deleteButton);
 
@@ -189,7 +187,12 @@ var UIColumnFactory = {
                                           class: "krake-column-row krake-selection-3 k_panel" });
 
     $deleteButton.bind('click', function(){
-      alert("column-" + columnId + " delete button clicked");  
+      var columnIdentifier = "#krake-column-" + columnId; 
+      chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
+        if(response.status == 'success'){
+          $(columnIdentifier).remove();
+        }   
+      });
     });
 
     $columnControl = $columnControl.append($deleteButton);
@@ -198,7 +201,9 @@ var UIColumnFactory = {
 
     return $wrapper;
   },//eo createColumn
+   
  
+
 
 };//eo UIColumnFactory
 
@@ -249,7 +254,7 @@ var uiBtnCreateListClick = function(e){
         }else{
           //show warning to user
         }//eo if-else
-        
+
       });
     }
     

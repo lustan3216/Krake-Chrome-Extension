@@ -72,15 +72,19 @@ SessionManager.prototype.setEventForState = function(state, eventHandler){
   //console.log('eventHandler for "' + state + '" set');
 };
 
-SessionManager.prototype.goToNextState = function(){
+SessionManager.prototype.goToNextState = function(state){
   var self = this;
-  var previousState = self.states[self.currentState];
-  self.currentState = previousState['after'];
 
-  if(previousState['post_transition_event'] != undefined){
-    (previousState['post_transition_event'])();
-  }
-// (self.states[self.currentState]['post_transition_event'])();
+  if(!state){
+    var previousState = self.states[self.currentState];
+    self.currentState = previousState['after'];
+
+    if(previousState['post_transition_event'] != undefined){
+      (previousState['post_transition_event'])();
+    }
+  }else{
+    self.currentState = state;
+  }//eo if-else
 };
 
 

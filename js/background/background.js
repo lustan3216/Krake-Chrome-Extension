@@ -23,6 +23,10 @@ chrome.runtime.onMessage.addListener(
       case "add_column":
         addColumn(request.params, sendResponse);
       break;
+
+      case "delete_column":
+        deleteColumn(request.params, sendResponse);
+      break;
     }//eo switch
   });
 
@@ -106,8 +110,29 @@ var addColumn = function(params, callback){
     concole.log("err");
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
   }
-  
-};
+};//eo addColumn
+
+var deleteColumn = function(params, callback){
+  try{
+    console.log('-- before "deleteColumn"');
+    console.log( JSON.stringify(sessionManager) );
+
+    if(sessionManager.currentColumn.columnId == params.columnId){
+      sessionManager.currentColumn = null;
+      sessionManager.goToNextState('idle');
+    }else{
+      SharedKrakeHelper.removeColumnFromSharedKrake(params.columnId);
+    }//eo if-else
+
+    console.log('-- after "deleteColumn"');
+    console.log( JSON.stringify(sessionManager) );
+
+    if (callback && typeof(callback) === "function")  callback({status: 'success'}); 
+  }catch(err){
+    concole.log("err");
+    if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
+  }
+};//eo deleteColumn
 
 
 
