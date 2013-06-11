@@ -14,6 +14,10 @@ var sharedKrake =
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
     switch(request.action){
+      case "update_url":
+   
+      break;
+
       case "load_script":
         loadScript(request.params.filename);
       break;
@@ -75,6 +79,13 @@ var loadScript = function(filename){
     });
   });
 };//eo loadScript
+
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+    //re-render panel using columns objects from storage if any. 
+});
+
+
 
 
 

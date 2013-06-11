@@ -1,18 +1,17 @@
 {
    "background": {
-      "scripts": [ "js/vendor/jquery_1.9.1.min.js", "js/params.js", "js/background.js" ]
+      "scripts": [ "js/libs/jquery/jquery_1.9.1.min.js", "js/background/params.js", "js/background/background.js" ]
    },
    "browser_action": {
       "default_icon": "images/krake_icon_disabled_24.png",
-      "default_title": "Release the Kraken!",
-      "popup" : "popup.html"
+      "default_title": "Release the Kraken!"
    },
 
    "content_scripts": [ {
       "matches"   : ["<all_urls>"],
       "css": [ "css/page.css" ], 
-      "js": [ "js/vendor/jquery_1.9.1.min.js", 
-              "js/vendor/jquery_ui_1.10.3.js", 
+      "js": [ "js/libs/jquery/jquery_1.9.1.min.js", 
+              "js/libs/jquery/jquery_ui_1.10.3.js", 
               "js/content.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_end"

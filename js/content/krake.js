@@ -16,15 +16,14 @@
   Author:
   Joseph Yang <sirjosephyang@krake.io>
 */
-var generateColumnId = function()
-{
+
+var generateColumnId = function(){
   return Math.floor( Math.random() * 10000000000 );
 }//
 /***************************************************************************/
 /************************** UI Column Factory  *****************************/
 /***************************************************************************/
-var UIColumnFactory = 
-{
+var UIColumnFactory = {
   /*
    * @Param: params:object
    *         {
@@ -37,8 +36,7 @@ var UIColumnFactory =
              }
    */
 
-  recreateUIColumn: function(params)
-  {
+  recreateUIColumn: function(params){
     
     var columnId = params.columnId;
     var type = params.columnType;
@@ -150,8 +148,9 @@ var UIColumnFactory =
 
   },
 
-  createColumn: function(type, columnId)
+  createUIColumn: function(type, columnId)
   {
+    console.log("createColumn");
     var divKrakeColumnId = "krake-column-" + columnId;
     var columnTitleId = "krake-column-title-" + columnId;
 
@@ -228,7 +227,7 @@ Panel.prototype.init = function(){
 var uiBtnCreateListClick = function(e){
   //add ui column
   var columnId = generateColumnId();
-  uiPanelWrapper.append(UIColumnFactory.createColumn('list', columnId));
+  uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', columnId));
   attachEnterKeyEventToColumnTitle(columnId);
   //add breadcrumb for ui column
 
@@ -238,7 +237,7 @@ var uiBtnCreateListClick = function(e){
 
 var uiBtnSelectSingleClick = function(e){
   var columnId = generateColumnId();
-  uiPanelWrapper.append(UIColumnFactory.createColumn('single', columnId));
+  uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', columnId));
 }; 
 
 var uiBtnEditPaginationClick = function(e){
@@ -260,6 +259,7 @@ var attachEnterKeyEventToColumnTitle = function(columnId){
     }
   });    
 };//eo attachEnterKeyEventToColumnTitle
+
 
 
 
