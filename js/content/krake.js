@@ -213,6 +213,11 @@ var uiBtnEditPagination = $("#btn-edit-pagination");
 var uiBtnDone = $("#btn-done");
 var uiPanelWrapper = $("#inner-wrapper"); 
 
+//uiBtnCreateList.bind('click', function(e){ alert("gangangan"); });
+var sayFuck = function(e){
+  alert("fuck you la");
+};
+
 var Panel = function(){
    
 };//eo Panel
@@ -223,6 +228,8 @@ Panel.prototype.init = function(){
   uiBtnEditPagination.bind('click', uiBtnEditPaginationClick);
   uiBtnDone.bind('click', uiBtnDoneClick);
 };
+
+
 
 var uiBtnCreateListClick = function(e){
   //add ui column

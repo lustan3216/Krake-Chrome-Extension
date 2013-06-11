@@ -13,12 +13,12 @@ chrome.extension.onMessage.addListener(
       break;
 
       case "disable_krake":
-        console.log("disable_krake");
+        hidePanel();
       break;
 
       case "load_script_done":
         console.log("load_script_done := " + request.params.filename);
-        if(request.params.filename == "js/krake.js"){
+        if(request.params.filename == "js/content/krake.js"){
           panel = new Panel();
           panel.init();
         }//eo if
@@ -46,7 +46,7 @@ var showPanel = function(){
     var panelWrapper = $('#k-panel-wrapper');
 
     panelWrapper.load(chrome.extension.getURL("html/panel.html"),function(){
-        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/krake.js" } });       
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } });       
       }); 
   }//eo if
   
@@ -55,8 +55,8 @@ var showPanel = function(){
 var hidePanel = function(){
   if($('#k-panel-wrapper').isExist()){
     $('#k-panel-wrapper').remove();
-    elementUIManager.disableElementSelection();
-    elementUIManager = null;
+    //elementUIManager.disableElementSelection();
+    //elementUIManager = null;
   }
 };
 

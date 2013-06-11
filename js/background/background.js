@@ -87,7 +87,16 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 
 
 
+var column = ColumnFactory.createColumn({
+  columnId: 1,
+  columnType: 'list',
+  url: "http://localhost"
+});
+console.log(JSON.stringify(column) );
 
+for(var key in column){
+  console.log("key:= " + key + ", value:= " + column[key]);
+}
 
 
 

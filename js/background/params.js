@@ -17,23 +17,23 @@
   Joseph Yang <sirjosephyang@krake.io>
 */
 
-var Params = 
+var CommonParams = 
 {
-  column_name_mapper : 
+  columnNameMapper : 
   {
-    origin_url : "origin_url",
-    destination_url : "destination_url",
-    column_name : "col_name",
-    generic_xpath : "xpath",
-    required_attribute : "required_attribute",
+    originUrl : "origin_url",
+    destinationUrl : "destination_url",
+    columnName : "col_name",
+    genericXpath : "xpath",
+    requiredAttribute : "required_attribute",
     options : "options",
     columns : "columns",
-    next_pager : "next_page"
+    nextPager : "next_page"
   },
   text :
   {
-  	default_column_title_text : "*New Column*",
-  	pagination_selection_done_text : "Collect data from multiple pages"
+  	defaultColumnTitleText : "*New Column*",
+  	paginationSelectionDoneText : "Collect data from multiple pages"
   }
 
 };//eo Params

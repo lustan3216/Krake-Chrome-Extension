@@ -84,7 +84,7 @@ SessionManager.prototype.goToNextState = function(){
 };
 
 
-
+/*
 module.exports = SessionManager;
 
 //  The sequence below is called when command is called directly from the terminal
@@ -96,7 +96,7 @@ if(!module.parent) {
   sessionManager.setEventForState('first_column_selected', function(){ console.log("hello world!"); });
   sessionManager.goToNextState();
 
-  /*
+  
   console.log('initial state := ' + sessionManager.currentState);
   sessionManager.goToNextState();
   console.log('current state := ' + sessionManager.currentState);
@@ -106,5 +106,6 @@ if(!module.parent) {
   console.log('current state := ' + sessionManager.currentState);
   sessionManager.goToNextState();
   console.log('current state := ' + sessionManager.currentState);
-  */
+  
 }
+*/

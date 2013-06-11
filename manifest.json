@@ -1,6 +1,10 @@
 {
    "background": {
-      "scripts": [ "js/libs/jquery/jquery_1.9.1.min.js", "js/background/params.js", "js/background/background.js" ]
+      "scripts": [ "js/libs/jquery/jquery_1.9.1.min.js", 
+                   "js/background/params.js", 
+                   "js/background/session_manager.js",
+                   "js/background/columns.js",
+                   "js/background/background.js" ]
    },
    "browser_action": {
       "default_icon": "images/krake_icon_disabled_24.png",
@@ -12,7 +16,7 @@
       "css": [ "css/page.css" ], 
       "js": [ "js/libs/jquery/jquery_1.9.1.min.js", 
               "js/libs/jquery/jquery_ui_1.10.3.js", 
-              "js/content.js" ],
+              "js/content/content.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_end"
    } ],
