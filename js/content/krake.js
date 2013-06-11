@@ -230,9 +230,6 @@ var Panel = {
   uiBtnCreateListClick : function(){
     chrome.extension.sendMessage({ action: "get_session"}, function(response){
       var sessionManager = response.session;
-      console.log("-- sessionManager");
-      console.log( JSON.stringify(sessionManager) );
- 
 
       if(sessionManager.currentState != 'idle'){
         alert("You must finish editing the previous column");
@@ -339,24 +336,28 @@ var UIElementSelector = {
     var elementText = (KrakeHelper.evaluateQuery(elementPathResults[1]))[0];
 
     var params = {
-      xpath : selectedElement[1],
-      elementType : selectedElement[0],
-      elementText : selectedElementText,
-      elementLink : selectedElement[2]
+      xpath : elementPathResults[1],
+      elementType : elementPathResults[0],
+      elementText : elementPathResults,
+      elementLink : elementPathResults[2]
     };
 
     chrome.extension.sendMessage({ action: "get_session"}, function(response){
       var sessionManager = response.session;
-      
+      console.log("--");
+      console.log(JSON.stringify(sessionManager));
+
       switch(sessionManager.currentState){
         case 'pre_selection_1':
-          chrome.extension.sendMessage({ name:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
+          chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
             
           });
         break;
 
         case 'pre_selection_2':
-
+          chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
+            
+          });
         break;
       }//eo switch
     });
@@ -381,106 +382,4 @@ var UIElementSelector = {
   }
 
 };//eo UIElementSelector
-
-
-
- this.selectElement = function(e)
-    {
-      e.stopPropagation();
-      
-      if ($(e.target).is('.k_panel') ) {
-              return;
-      }else{
-        var selectedElement = self.getElementXPath(this);
-        var selectedElementText = (self.evaluateQuery(selectedElement[1]))[0];
-
-        chrome.extension.sendMessage({ name: "get_current_state" }, function(response){
-
-          switch(response.currentState)
-          {
-            case "ready_for_selection":
-              chrome.extension.sendMessage({ name: "set_xpath_1", 
-                                           params: { xpath: selectedElement[1], 
-                                                     elementType: selectedElement[0],
-                                                     elementText: selectedElementText,
-                                                     elementLink: selectedElement[2] } },
-                function(response){ 
-                    self.updateColumnRow(selectedElement[1], "selection-1", response.columnId, selectedElement[0]);
-                    
-                    if(response.columnType=="single")
-                    {
-                      //disable editable row for title
-                      var identifier = "#krake-column-title-" + response.columnId;
-                        $(identifier).attr('contenteditable', 'false');
-
-                        ContentHelper.getColumnObjectFromKrakeForId(response.columnId,
-                          function(columnObj)
-                          {
-                            if(columnObj)
-                            {
-                              var option = confirm("Has multiple pages?");
-
-                              if(option == true)
-                              {
-                                chrome.extension.sendMessage({ name: "pre_select_next_pager" });
-                                panel.addPagination(columnObj.columnId);
-                              }
-                                
-                            }
-
-                            if(columnObj && columnObj.selection1.elementLink)
-                              panel.addDetailPageLink(columnObj.columnId, columnObj.selection1.elementLink);
-                        });
-                    }
-                });
-              
-            break;
-
-            case "xpath1_selected":
-              chrome.extension.sendMessage({ name: "set_xpath_2", 
-                                           params: { xpath: selectedElement[1], 
-                                                     elementType: selectedElement[0],
-                                                     elementText: selectedElementText,
-                                                     elementLink: selectedElement[2] } },
-                function(response){
-                    self.updateColumnRow(selectedElement[1], "selection-2", response.columnId, selectedElement[0]);
-
-                    if(response.columnType=="list")
-                    {
-                        ContentHelper.getColumnObjectFromKrakeForId(response.columnId,
-                          function(columnObj)
-                          { 
-                            if(columnObj)
-                            {
-                              var option = confirm("Has multiple pages?");
-
-                              if(option == true)
-                              {
-                                chrome.extension.sendMessage({ name: "pre_select_next_pager" });
-                                panel.addPagination(columnObj.columnId);
-                              }   
-                            }
-                              
-                            if(columnObj && columnObj.selection1.elementLink)
-                              panel.addDetailPageLink(columnObj.columnId, columnObj.selection1.elementLink);
-                        });
-                    }  
-
-                });
-              
-            break;
-
-          }
-        });  
-      }  
-    }
-
-
-
-
-
-
-
-
-
 

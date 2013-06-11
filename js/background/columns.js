@@ -37,7 +37,7 @@ Column.prototype.setAttribute = function(key, value){
 };
 
 
-Column.prototype.setSelection1 = function(params, callback){
+Column.prototype.setSelection1 = function(params){
   var self = this;
   self.selection1.xpath = params.xpath;
   self.selection1.elementType = params.elementType;
@@ -52,18 +52,15 @@ Column.prototype.setSelection1 = function(params, callback){
   if(elementType == "img")
     self.requiredAttribute = "src";
   
-  if (callback && typeof(callback) === "function")  callback(); 
 };
 
 
-Column.prototype.setSelection2 = function(params, callback){
+Column.prototype.setSelection2 = function(params){
   var self = this;
   self.selection2.xpath = params.xpath;
   self.selection2.elementType = params.elementType;
   self.selection2.elementText = params.elementText;
   self.selection2.elementLink = params.elementLink;
-
-  if (callback && typeof(callback) === "function")  callback(); 
 }; 
 
 

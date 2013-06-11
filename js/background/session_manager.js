@@ -85,6 +85,8 @@ SessionManager.prototype.goToNextState = function(state){
   }else{
     self.currentState = state;
   }//eo if-else
+
+  return self;
 };
 
 

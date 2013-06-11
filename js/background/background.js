@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case 'edit_current_column':
-        alert('edit_current_column');
+        editCurrentColumn(request.params);
       break;
     }//eo switch
   });
@@ -111,7 +111,7 @@ var addColumn = function(params, callback){
        
     if (callback && typeof(callback) === "function")  callback({status: 'success'});  
   }catch(err){
-    concole.log("err");
+    concole.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
   }
 };//eo addColumn
@@ -133,12 +133,41 @@ var deleteColumn = function(params, callback){
 
     if (callback && typeof(callback) === "function")  callback({status: 'success'}); 
   }catch(err){
-    concole.log("err");
+    concole.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
   }
 };//eo deleteColumn
 
+/*
+ * @Param: params:object { attribute:"xpath_1", values:params } 
+ */
+var editCurrentColumn = function(params, callback){
+  try{
+    console.log('-- editCurrentColumn attribute := ' + params.attribute);
+    console.log('-- before "editCurrentColumn"');
+    console.log( JSON.stringify(sessionManager) );
+   
+    switch(params.attribute){
+      case 'xpath_1':
+        sessionManager.currentColumn.setSelection1(params.values);
+        sessionManager.goToNextState().goToNextState();
+      break;
 
+      case 'xpath_2':
+        sessionManager.currentColumn.setSelection2(params.values);
+        sessionManager.goToNextState().goToNextState();
+      break;
+    }//eo switch
+    
+    console.log('-- after "editCurrentColumn"');
+    console.log( JSON.stringify(sessionManager) );
+
+    if (callback && typeof(callback) === "function")  callback({status: 'success'}); 
+  }catch(err){
+    console.log(err);
+    if (callback && typeof(callback) === "function")  callback({status: 'error'});
+  }
+};
 
 
 
