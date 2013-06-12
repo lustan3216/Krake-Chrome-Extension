@@ -326,6 +326,18 @@ var UIElementSelector = {
     return false; //preventDefault & stopPropogation
   },
   
+  attachElementHighlightListeners : function(){   
+    $('*').bind('mouseover', UIElementSelector.mouseOver);
+    $('*').bind('mouseout', UIElementSelector.mouseOut);
+    $('*').bind('click', UIElementSelector.selectElement);
+  },
+
+  detachElementHighlightListeners : function(){
+    $('*').unbind('mouseover', UIElementSelector.mouseOver);
+    $('*').unbind('mouseout', UIElementSelector.mouseOut);
+    $('*').unbind('click', UIElementSelector.selectElement);
+  },
+
   selectElement : function(e){
     e.preventDefault();
     e.stopPropagation();
@@ -344,42 +356,70 @@ var UIElementSelector = {
 
     chrome.extension.sendMessage({ action: "get_session"}, function(response){
       var sessionManager = response.session;
-      console.log("--");
-      console.log(JSON.stringify(sessionManager));
+      //console.log("--");
+      //console.log(JSON.stringify(sessionManager));
 
       switch(sessionManager.currentState){
         case 'pre_selection_1':
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
-            
+            console.log("--");
+            console.log( JSON.stringify(response) );
+            if(response.status == 'success'){
+              //update column text
+              var sessionManager = response.session;
+              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementPathResults[1], elementPathResults[0]);
+            }
           });
         break;
 
         case 'pre_selection_2':
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
-            
+            if(response.status == 'success'){
+              //update column text
+              var sessionManager = response.session;
+              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementPathResults[1], elementPathResults[0]);
+            }
           });
         break;
       }//eo switch
     });
 
   },
-  
+
+  /*
+   * @Description: Update the row content text upon successful element selection
+   * @Param: columnId, column id
+   * @Param: rowIndex, 1, 2
+   */
+  updateColumnText : function(columnId, rowIndex, xpath, elementType){
+    var resultSet = KrakeHelper.evaluateQuery(xpath); //[value, nodeCount, nodelist]
+    alert("updateColumnText");
+
+    var selector = rowIndex == 1? 
+                   '#krake-first-selection-' + columnId: 
+                   '#krake-second-selection-' + columnId;
+
+    switch(elementType.toLowerCase()){
+      case 'img':
+        $(selector).html(Params.IMAGE_TEXT); 
+      break;
+
+      default:
+        $(selector).html(resultSet[0]); 
+      break;
+    }//eo switch
+    
+    
+  },
+
+         
+
   selectNextPager : function(e){
     e.preventDefault();
-  },
+  }
   
 
-  attachElementHighlightListeners : function(){   
-    $('*').bind('mouseover', UIElementSelector.mouseOver);
-    $('*').bind('mouseout', UIElementSelector.mouseOut);
-    $('*').bind('click', UIElementSelector.selectElement);
-  },
-
-  detachElementHighlightListeners : function(){
-    $('*').unbind('mouseover', UIElementSelector.mouseOver);
-    $('*').unbind('mouseout', UIElementSelector.mouseOut);
-    $('*').unbind('click', UIElementSelector.selectElement);
-  }
+  
 
 };//eo UIElementSelector
 

@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case 'edit_current_column':
-        editCurrentColumn(request.params);
+        editCurrentColumn(request.params, sendResponse);
       break;
     }//eo switch
   });
@@ -109,7 +109,8 @@ var addColumn = function(params, callback){
     console.log('-- after "addColumn"');
     console.log( JSON.stringify(sessionManager) );
        
-    if (callback && typeof(callback) === "function")  callback({status: 'success'});  
+    if (callback && typeof(callback) === "function")  
+      callback({status: 'success', session: sessionManager});  
   }catch(err){
     concole.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
@@ -131,7 +132,8 @@ var deleteColumn = function(params, callback){
     console.log('-- after "deleteColumn"');
     console.log( JSON.stringify(sessionManager) );
 
-    if (callback && typeof(callback) === "function")  callback({status: 'success'}); 
+    if (callback && typeof(callback) === "function")  
+      callback({status: 'success', session: sessionManager}); 
   }catch(err){
     concole.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
@@ -162,7 +164,8 @@ var editCurrentColumn = function(params, callback){
     console.log('-- after "editCurrentColumn"');
     console.log( JSON.stringify(sessionManager) );
 
-    if (callback && typeof(callback) === "function")  callback({status: 'success'}); 
+    if (callback && typeof(callback) === "function")  
+      callback({status: 'success', session: sessionManager}); 
   }catch(err){
     console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'});
