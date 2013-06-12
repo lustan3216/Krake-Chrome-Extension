@@ -5,7 +5,8 @@
                    "js/background/sharedkrake_helper.js",
                    "js/background/session_manager.js",
                    "js/background/columns.js",
-                   "js/background/background.js" ]
+                   "js/background/background.js",
+                   "js/background/pattern_matcher.js" ]
    },
    "browser_action": {
       "default_icon": "images/krake_icon_disabled_24.png",
@@ -14,7 +15,7 @@
 
    "content_scripts": [ {
       "matches"   : ["<all_urls>"],
-      "css": [ "css/page.css" ], 
+      "css": [ "css/content.css" ], 
       "js": [ "js/libs/jquery/jquery_1.9.1.min.js", 
               "js/libs/jquery/jquery_ui_1.10.3.js", 
               "js/content/content.js" ],
@@ -23,6 +24,7 @@
    } ],
    "web_accessible_resources": [
     "images/bin.png",
+    "images/save.png",
     "images/link.png",
     "html/panel.html"
   ],

@@ -155,13 +155,41 @@ var UIColumnFactory = {
     var columnControlId =  "krake-column-control-" + columnId;
     var $columnControl = $("<div>", {  id: columnControlId,
                                        class: "krake-column-control k_panel" });
-
+    
+    //delete button
     var deleteButtonImageUrl = "background-image: url(\"" +
                                chrome.extension.getURL("images/bin.png") + 
                               "\");";
 
     var $deleteButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-delete",
                                         style:  deleteButtonImageUrl });
+
+    $deleteButton.bind('click', function(){
+      var columnIdentifier = "#krake-column-" + columnId; 
+      chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
+        if(response.status == 'success'){
+          $(columnIdentifier).remove();
+        }   
+      });
+    });
+
+    //save button
+    var saveButtonImageUrl = "background-image: url(\"" +
+                               chrome.extension.getURL("images/save.png") + 
+                              "\");";
+
+    var $saveButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-save",
+                                        style:  saveButtonImageUrl });
+
+    $saveButton.bind('click', function(){
+      alert("saveButton clicked");
+      var columnIdentifier = "#krake-column-" + columnId; 
+      chrome.extension.sendMessage({ action: "save_column" }, function(response){
+        if(response.status == 'success'){
+          //change save button to edit button
+        }   
+      });
+    });
 
     var breadcrumbId = "k_column-breadcrumb-" + columnId;
     var $breadcrumb = $("<div>", { id: breadcrumbId,
@@ -184,18 +212,11 @@ var UIColumnFactory = {
     var $thirdSelection = $("<div>", { id: thirdSelectionId,
                                           class: "krake-column-row krake-selection-3 k_panel" });
 
-    $deleteButton.bind('click', function(){
-      var columnIdentifier = "#krake-column-" + columnId; 
-      chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
-        if(response.status == 'success'){
-          $(columnIdentifier).remove();
-        }   
-      });
-    });
+    
 
     $columnControl = $columnControl.append($deleteButton);
 
-    $wrapper.append($columnControl.append($deleteButton)).append($breadcrumb).append($columnTitle).append($firstSelection).append($secondSelection).append($thirdSelection);
+    $wrapper.append($columnControl.append($deleteButton).append($saveButton)).append($breadcrumb).append($columnTitle).append($firstSelection).append($secondSelection).append($thirdSelection);
 
     return $wrapper;
   },//eo createColumn
@@ -302,7 +323,17 @@ var Panel = {
 
 };//eo Panel
  
-
+//courtesy of https://github.com/sprucemedia/jQuery.divPlaceholder.js
+(function ($) {
+  $(document).on('change keydown keypress input', '*[data-placeholder]', function() {
+    if (this.textContent) {
+      this.setAttribute('data-div-placeholder-content', 'true');
+    }
+    else {
+      this.removeAttribute('data-div-placeholder-content');
+    }
+  });
+})(jQuery);
 /***************************************************************************/
 /************************  UIElementSelector  ******************************/
 /***************************************************************************/
@@ -378,6 +409,9 @@ var UIElementSelector = {
               //update column text
               var sessionManager = response.session;
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementPathResults[1], elementPathResults[0]);
+              chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
+
+              });
             }
           });
         break;
@@ -393,8 +427,6 @@ var UIElementSelector = {
    */
   updateColumnText : function(columnId, rowIndex, xpath, elementType){
     var resultSet = KrakeHelper.evaluateQuery(xpath); //[value, nodeCount, nodelist]
-    alert("updateColumnText");
-
     var selector = rowIndex == 1? 
                    '#krake-first-selection-' + columnId: 
                    '#krake-second-selection-' + columnId;

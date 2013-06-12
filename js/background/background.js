@@ -31,6 +31,11 @@ chrome.runtime.onMessage.addListener(
       case 'edit_current_column':
         editCurrentColumn(request.params, sendResponse);
       break;
+
+      case 'match_pattern':
+        alert("match_pattern");
+        matchPattern(sendResponse);
+      break;
     }//eo switch
   });
 
@@ -152,12 +157,12 @@ var editCurrentColumn = function(params, callback){
     switch(params.attribute){
       case 'xpath_1':
         sessionManager.currentColumn.setSelection1(params.values);
-        sessionManager.goToNextState().goToNextState();
+        sessionManager.goToNextState().goToNextState(); //current state := 'pre_selection_2'
       break;
 
       case 'xpath_2':
         sessionManager.currentColumn.setSelection2(params.values);
-        sessionManager.goToNextState().goToNextState();
+        sessionManager.goToNextState(); //current state := 'post_selection_2'
       break;
     }//eo switch
     
@@ -170,7 +175,23 @@ var editCurrentColumn = function(params, callback){
     console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'});
   }
-};
+};//eo editCurrentColumn
+
+var matchPattern = function(callback){
+  try{
+    var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
+    if(result.status == 'success'){
+      sessionManager.currentColumn.genericXpath = result.genericXpath;
+      //tell content script to highlight all elements covered by generic xpath
+    }else{
+      //notify user
+    }
+    console.log("-- matchPattern result");
+    console.log( JSON.stringify(result) );
+  }catch(err){
+    console.log(err);
+  }
+}
 
 
 
