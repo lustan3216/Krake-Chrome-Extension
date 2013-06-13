@@ -179,15 +179,13 @@ var editCurrentColumn = function(params, callback){
 
 var matchPattern = function(callback){
   try{
+    //result => { status: 'success', genericXpath: array }
     var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
-    if(result.status == 'success'){
-      sessionManager.currentColumn.genericXpath = result.genericXpath;
-      //tell content script to highlight all elements covered by generic xpath
-    }else{
-      //notify user
-    }
-    console.log("-- matchPattern result");
-    console.log( JSON.stringify(result) );
+    sessionManager.currentColumn.genericXpath = result.genericXpath;
+    var response = result;
+    response.url = sessionManager.currentColumn.url;
+    //tell content script to highlight all elements covered by generic xpath
+    if (callback && typeof(callback) === "function")   callback(response); 
   }catch(err){
     console.log(err);
   }

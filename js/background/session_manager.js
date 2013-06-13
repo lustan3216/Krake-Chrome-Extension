@@ -115,6 +115,30 @@ var SharedKrake = (function(){
   };
 })();
 
+var ColorGenerator = {
+  colorArray : [ 
+    " k_highlight_FFCC00 ", //yellow
+    " k_highlight_FF6600 ", //orange
+    " k_highlight_3EA99F ", //light green
+    " k_highlight_FF99FF ", //light purple
+    " k_highlight_82CAFF ", //sky blue
+    " k_highlight_99CCFF ",
+    " k_highlight_FF00FF ",
+    " k_highlight_CC33FF ",
+    " k_highlight_FFCCCC ",
+    " k_highlight_CCFF00 ",
+    " k_highlight_0099CC ",
+    " k_highlight_FFCCFF ",
+    " k_highlight_33FF33 ",
+    " k_highlight_FFFF99 " 
+  ],
+
+  getColor : function(){
+
+  }
+};//eo ColorGenerator
+
+
 /*
 module.exports = SharedKrake;
 

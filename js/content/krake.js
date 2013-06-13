@@ -374,17 +374,17 @@ var UIElementSelector = {
     e.stopPropagation();
 
     if ($(e.target).is('.k_panel')) return;
-  
-    var elementPathResults = KrakeHelper.getElementXPath(this); //[nodeName, xpath, link];
-    var elementText = (KrakeHelper.evaluateQuery(elementPathResults[1]))[0];
+
+    var elementPathResult = KrakeHelper.getElementXPath(this); 
+    var elementText = KrakeHelper.evaluateQuery(elementPathResult.xpath).text;
 
     var params = {
-      xpath : elementPathResults[1],
-      elementType : elementPathResults[0],
-      elementText : elementPathResults,
-      elementLink : elementPathResults[2]
+      xpath : elementPathResult.xpath,
+      elementType : elementPathResult.nodeName,
+      elementText : elementText,
+      elementLink : elementPathResult.link
     };
-
+  
     chrome.extension.sendMessage({ action: "get_session"}, function(response){
       var sessionManager = response.session;
       //console.log("--");
@@ -393,12 +393,9 @@ var UIElementSelector = {
       switch(sessionManager.currentState){
         case 'pre_selection_1':
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
-            console.log("--");
-            console.log( JSON.stringify(response) );
             if(response.status == 'success'){
-              //update column text
               var sessionManager = response.session;
-              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementPathResults[1], elementPathResults[0]);
+              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementText, elementPathResult.nodeName);
             }
           });
         break;
@@ -406,11 +403,16 @@ var UIElementSelector = {
         case 'pre_selection_2':
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
             if(response.status == 'success'){
-              //update column text
               var sessionManager = response.session;
-              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementPathResults[1], elementPathResults[0]);
+              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
               chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
-
+                alert( JSON.stringify(response) );
+                if(respose.status == 'success'){
+                  //highlight all elements depicted by genericXpath
+                  UIElementSelector.highlightElements(response.url, response.genericXpath);
+                }else{
+                  //** notify users that xpaths of 2 selections are not matched **
+                }
               });
             }
           });
@@ -420,13 +422,18 @@ var UIElementSelector = {
 
   },
 
+  highlightElements : function(url, genericXpath){
+    if(document.url != url) return;
+
+
+  },
+
   /*
    * @Description: Update the row content text upon successful element selection
    * @Param: columnId, column id
    * @Param: rowIndex, 1, 2
    */
-  updateColumnText : function(columnId, rowIndex, xpath, elementType){
-    var resultSet = KrakeHelper.evaluateQuery(xpath); //[value, nodeCount, nodelist]
+  updateColumnText : function(columnId, rowIndex, text, elementType){
     var selector = rowIndex == 1? 
                    '#krake-first-selection-' + columnId: 
                    '#krake-second-selection-' + columnId;
@@ -437,7 +444,7 @@ var UIElementSelector = {
       break;
 
       default:
-        $(selector).html(resultSet[0]); 
+        $(selector).html(text); 
       break;
     }//eo switch
     

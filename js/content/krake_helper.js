@@ -48,8 +48,13 @@ var KrakeHelper =
       str = '[INTERNAL ERROR]';
       nodeCount = 0;
     }
-
-    return [str, nodeCount, nodesToHighlight];
+    
+    return { 
+             text: str,
+             nodeCount: nodeCount,
+             nodesToHighlight: nodesToHighlight
+           }
+    //return [str, nodeCount, nodesToHighlight];
   },//eo evaluateQuery
 
   clearElementHighlights: function()
@@ -70,7 +75,13 @@ var KrakeHelper =
     {
       var nodename = element.nodeName.toLowerCase();
       var link = nodename=="a"? element.href : nodename=="img"? element.src : null;
-      return [element.nodeName, KrakeHelper.getElementTreeXPath(element), link];
+      //return [element.nodeName, KrakeHelper.getElementTreeXPath(element), link];
+      var xpath = KrakeHelper.getElementTreeXPath(element);
+      return {
+               nodeName : element.nodeName,
+               xpath : xpath,
+               link : link
+             }
     }
     catch(error)
     {
