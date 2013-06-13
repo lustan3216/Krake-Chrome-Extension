@@ -325,9 +325,58 @@ var Panel = {
         $(this).blur().next().focus();  return false;
       }
     }); 
-  }
+  },
+
+  showLink : function(column){
+    if(column.selection1.elementType.toLowerCase() == 'a'){
+      var selector = '#krake-column-control-' + column.columnId;
+      console.log(selector);
+
+      var linkButtonImageUrl = "background-image: url(\"" + chrome.extension.getURL("images/link.png") + "\");";
+
+      var $linkButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-link",
+                                        style:  linkButtonImageUrl });
+
+      $(selector).append($linkButton);
+
+      $linkButton.bind('click', function(){
+        
+      });
+      /*
+      $linkButton.bind('click', function(){
+        //show list of elements 
+        var results = KrakeHelper.evaluateQuery(column.genericXpath);
+        
+        var linkList = '<div id="k-link-list-' + column.columnId + '" >';
+
+        for(var i=0; i<results.nodesToHighlight.length; i++){
+          linkList = linkList + '<a href="' + results.nodesToHighlight[i].href + '">' + 
+                     results.nodesToHighlight[i].innerHTML + '</a>';
+
+        }
+        
+        linkList = linkList + '</div>';
+
+        //console.log(linkList);
+      });//eo bind
+      */
+
+    }
+  }//eo showLink
 
 };//eo Panel
+/*
+$saveButton.bind('click', function(){
+      var columnIdentifier = "#krake-column-" + columnId; 
+      chrome.extension.sendMessage({ action: "save_column" }, function(response){
+        console.log( JSON.stringify(response) );
+        if(response.status == 'success'){
+          //change save button to edit button
+        }   
+      });
+    });
+
+*/
  
 //courtesy of https://github.com/sprucemedia/jQuery.divPlaceholder.js
 (function ($) {
