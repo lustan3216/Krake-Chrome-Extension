@@ -371,6 +371,10 @@ var UIElementSelector = {
     $('*').unbind('click', UIElementSelector.selectElement);
   },
 
+  restoreElementDefaultActions : function(){
+    UIElementSelector.detachElementHighlightListeners();
+  },
+
   selectElement : function(e){
     e.preventDefault();
     e.stopPropagation();

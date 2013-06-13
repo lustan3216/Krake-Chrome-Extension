@@ -14,6 +14,7 @@ chrome.extension.onMessage.addListener(
 
       case "disable_krake":
         hidePanel();
+        UIElementSelector.restoreElementDefaultActions();
       break;
 
       case "load_script_done":
