@@ -18,7 +18,7 @@ var SharedKrakeHelper = {
       	columns.splice(i, 1);
         return true;
       }else{
-        var result = SharedKrakeHelper.searchColumn(columns[i].options.columns, columnId);
+        var result = SharedKrakeHelper.removeColumnFromSharedKrake(columns[i].options.columns, columnId);
         if(result) return result;
       }
     }
