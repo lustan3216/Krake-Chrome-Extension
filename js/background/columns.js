@@ -72,7 +72,11 @@ Column.prototype.validate = function(){
   var self = this;
   
   var isComplete = function(){
-    return (self.selection1.xpath == null || self.selection2.xpath == null)? false : true;
+    if(self.columnType == 'list')
+      return (self.selection1.xpath == null || self.selection2.xpath == null)? false : true;
+    
+    if(self.columnType == 'single')
+      return (self.selection1.xpath == null)? false : true;
   };
   console.log('-- validation');
   console.log('isComplete: ' + isComplete());

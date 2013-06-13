@@ -211,6 +211,9 @@ var saveColumn = function(params, callback){
       SharedKrakeHelper.saveColumn(sessionManager.currentColumn);
       sessionManager.goToNextState('idle');
 
+      console.log('-- after "saveColumn"');
+      console.log( JSON.stringify(SharedKrake.getInstance()) );
+
       if (callback && typeof(callback) === "function")  
         callback({status: 'success', session: sessionManager, sharedKrake: sharedKrake}); 
     }
