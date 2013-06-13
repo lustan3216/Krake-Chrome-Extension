@@ -1,12 +1,13 @@
 var SharedKrakeHelper = {
-  addColumnToSharedKrake : function(column){
-    alert("addColumnToSharedKrake");
+  saveColumn : function(column){
+    console.log("addColumnToSharedKrake");
+    SharedKrake.getInstance().columns.push(column);
   },//eo addColumnToSharedKrake
   
   /*
    * @Return: { deletedColumn:obj, sharedKrake:obj }
    */
-  removeColumnFromSharedKrake: function(columnId){
+  removeColumn: function(columnId){
     alert("removeColumnFromSharedKrake");
   },//eo removeColumnFromSharedKrake
 

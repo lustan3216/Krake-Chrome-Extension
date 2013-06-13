@@ -31,13 +31,13 @@ var Column = function(params){
   this.options.columns = [];
   this.genericXpath = null;
   this.requiredAttribute = null;
+
 };
 
 Column.prototype.setAttribute = function(key, value){
   var self = this;
   self[key] = value;
 };
-
 
 Column.prototype.setSelection1 = function(params){
   var self = this;
@@ -56,7 +56,6 @@ Column.prototype.setSelection1 = function(params){
   
 };
 
-
 Column.prototype.setSelection2 = function(params){
   var self = this;
   self.selection2.xpath = params.xpath;
@@ -65,6 +64,21 @@ Column.prototype.setSelection2 = function(params){
   self.selection2.elementLink = params.elementLink;
 }; 
 
+/*
+ * @Description: validate column before saving into sharedKrake
+ * @Return: true => validataion passed, false => validation failed
+ */
+Column.prototype.validate = function(){
+  var self = this;
+  
+  var isComplete = function(){
+    return (self.selection1.xpath == null || self.selection2.xpath == null)? false : true;
+  };
+  console.log('-- validation');
+  console.log('isComplete: ' + isComplete());
+
+  return isComplete();
+};
 
 
 /****************************************************************************************/
@@ -98,7 +112,6 @@ ColorGenerator.prototype.getColor = function()
   return color; 
 }
 
-
 /*
 module.exports = Column;
 module.exports = ColumnFactory;
@@ -115,8 +128,10 @@ if(!module.parent) {
   column.setAttribute('parentColumnId', '1234');
   console.log( JSON.stringify(column));
   
-}
-
+  console.log('outside : ' + column.validate());
+};
 */
+
+
 
 

@@ -9,9 +9,6 @@ var colorGenerator = null;
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
     switch(request.action){
-      case 'get_column_by_id':
-        getColumnById(request.params, sendResponse);
-      break;
 
       case "update_url":
    
@@ -29,12 +26,20 @@ chrome.runtime.onMessage.addListener(
         addColumn(request.params, sendResponse);
       break;
 
-      case "delete_column":
-        deleteColumn(request.params, sendResponse);
+      case 'get_column_by_id':
+        getColumnById(request.params, sendResponse);
       break;
 
       case 'edit_current_column':
         editCurrentColumn(request.params, sendResponse);
+      break;
+
+      case 'delete_column':
+        deleteColumn(request.params, sendResponse);
+      break;
+
+      case 'save_column':
+        saveColumn(request.params, sendResponse);
       break;
 
       case 'match_pattern':
@@ -110,14 +115,14 @@ var loadScript = function(filename){
 
 var addColumn = function(params, callback){
   try{
-    console.log('-- before "addColumn"');
-    console.log( JSON.stringify(sessionManager) );
+    //console.log('-- before "addColumn"');
+    //console.log( JSON.stringify(sessionManager) );
 
     sessionManager.currentColumn = ColumnFactory.createColumn(params);
     sessionManager.goToNextState();
 
-    console.log('-- after "addColumn"');
-    console.log( JSON.stringify(sessionManager) );
+    //console.log('-- after "addColumn"');
+    //console.log( JSON.stringify(sessionManager) );
        
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager});  
@@ -129,8 +134,8 @@ var addColumn = function(params, callback){
 
 var deleteColumn = function(params, callback){
   try{
-    console.log('-- before "deleteColumn"');
-    console.log( JSON.stringify(sessionManager) );
+    //console.log('-- before "deleteColumn"');
+    //console.log( JSON.stringify(sessionManager) );
     var deletedColumn;
 
     if(sessionManager.currentColumn && sessionManager.currentColumn.columnId == params.columnId){
@@ -141,13 +146,13 @@ var deleteColumn = function(params, callback){
       SharedKrakeHelper.removeColumnFromSharedKrake(params.columnId);
     }//eo if-else
 
-    console.log('-- after "deleteColumn"');
-    console.log( JSON.stringify(sessionManager) );
+    //console.log('-- after "deleteColumn"');
+    //console.log( JSON.stringify(sessionManager) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager, deletedColumn: deletedColumn}); 
   }catch(err){
-    concole.log(err);
+    console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
   }
 };//eo deleteColumn
@@ -156,10 +161,8 @@ var deleteColumn = function(params, callback){
  * @Param: params:object { attribute:"xpath_1", values:params } 
  */
 var editCurrentColumn = function(params, callback){
-  try{
-    console.log('-- editCurrentColumn attribute := ' + params.attribute);
-    console.log('-- before "editCurrentColumn"');
-    console.log( JSON.stringify(sessionManager) );
+  try{    console.log('-- before "editCurrentColumn"');
+    //console.log( JSON.stringify(sessionManager) );
    
     switch(params.attribute){
       case 'xpath_1':
@@ -173,8 +176,8 @@ var editCurrentColumn = function(params, callback){
       break;
     }//eo switch
     
-    console.log('-- after "editCurrentColumn"');
-    console.log( JSON.stringify(sessionManager) );
+    //console.log('-- after "editCurrentColumn"');
+    //console.log( JSON.stringify(sessionManager) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager}); 
@@ -183,6 +186,21 @@ var editCurrentColumn = function(params, callback){
     if (callback && typeof(callback) === "function")  callback({status: 'error'});
   }
 };//eo editCurrentColumn
+
+var saveColumn = function(params, callback){
+  try{
+    //validate currentColumn
+    if(sessionManager.currentColumn.validate()){
+      SharedKrakeHelper.saveColumn(sessionManager.currentColumn);
+      sessionManager.goToNextState('idle');
+
+      if (callback && typeof(callback) === "function")  
+        callback({status: 'success', session: sessionManager, sharedKrake: sharedKrake}); 
+    }
+  }catch(err){
+
+  }
+};//eo saveButton
 
 var matchPattern = function(callback){
   try{

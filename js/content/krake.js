@@ -184,9 +184,9 @@ var UIColumnFactory = {
                                         style:  saveButtonImageUrl });
 
     $saveButton.bind('click', function(){
-      alert("saveButton clicked");
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
+        console.log( JSON.stringify(response) );
         if(response.status == 'success'){
           //change save button to edit button
         }   
@@ -258,10 +258,12 @@ var Panel = {
         alert("You must finish editing the previous column");
       }else{
         var newColumnId = Panel.generateColumnId();
-        var params = {};
-        params.columnId = newColumnId;
-        params.columnType = 'list';
-        params.url = document.URL;
+
+        var params = {
+          columnId : newColumnId,
+          columnType : 'list',
+          url : document.URL
+        };
 
         chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
           //only add UIColumn to panel once a logical column object is created in sessionManager
@@ -284,10 +286,12 @@ var Panel = {
         alert("You must finish editing the previous column");
       }else{
         var newColumnId = Panel.generateColumnId();
-        var params = {};
-        params.columnId = newColumnId;
-        params.columnType = 'single';
-        params.url = document.URL;
+
+        var params = {
+          columnId : newColumnId,
+          columnType : 'single',
+          url : document.URL
+        };
 
         chrome.extension.sendMessage({ action: "add_column", params: params}, function(response){
           //only add UIColumn to panel once a logical column object is created in sessionManager
@@ -416,6 +420,8 @@ var UIElementSelector = {
                 if(response.status == 'success'){
                   //highlight all elements depicted by genericXpath
                   UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                  //display 'link' icon
+                  Panel.showLink(response.column);
                 }else{
                   //** notify users that xpaths of 2 selections are not matched **
                 }
@@ -429,11 +435,12 @@ var UIElementSelector = {
   },
 
   highlightElements : function(url, genericXpath, colorCode){
+    console.log("-- highlightElements");
     if(document.URL != url) return;
     
     var result = KrakeHelper.evaluateQuery(genericXpath);
     var nodes = result.nodesToHighlight;
-
+    
     for(var i=0; i<nodes.length; i++){
       nodes[i].className += colorCode;
     }
