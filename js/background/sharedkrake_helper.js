@@ -9,10 +9,24 @@ var SharedKrakeHelper = {
    */
   removeColumn: function(columnId){
     alert("removeColumnFromSharedKrake");
+    SharedKrakeHelper.removeColumnFromSharedKrake(SharedKrake.getInstance().columns, columnId);
   },//eo removeColumnFromSharedKrake
 
+  removeColumnFromSharedKrake : function(columns, columnId){
+    for(var i=0; i<columns.length; i++){
+      if(columns[i].columnId==columnId){
+      	columns.splice(i, 1);
+        return true;
+      }else{
+        var result = SharedKrakeHelper.searchColumn(columns[i].options.columns, columnId);
+        if(result) return result;
+      }
+    }
+    return null;
+  },
+
   findColumnById : function(columnId){
-    return BackgroundHelper.searchColumn(sharedKrake.columns, columnId);
+    return SharedKrakeHelper.searchColumn(SharedKrake.getInstance().columns, columnId);
   },//eo findColumnById
   
   searchColumn : function(columns, columnId){
@@ -20,7 +34,7 @@ var SharedKrakeHelper = {
       if(columns[i].columnId==columnId){
         return columns[i];
       }else{
-        var result = BackgroundHelper.searchColumn(columns[i].options.columns, columnId);
+        var result = SharedKrakeHelper.searchColumn(columns[i].options.columns, columnId);
         if(result) return result;
       }
     }

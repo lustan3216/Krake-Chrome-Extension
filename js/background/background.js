@@ -22,6 +22,10 @@ chrome.runtime.onMessage.addListener(
         sendResponse({ session: sessionManager });
       break;
 
+      case 'get_shared_krake':
+        sendResponse({ sharedKrake: SharedKrake.getInstance() });
+      break;
+
       case "add_column":
         addColumn(request.params, sendResponse);
       break;
@@ -100,8 +104,19 @@ var clearCache = function(){
 
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-    //re-render panel using columns objects from storage if any. 
+  //re-render panel using columns objects from storage if any. 
+  if(isActive){
+    //Remove column that is not done editing from sessionManager
+    sessionManager.currentState = "idle";
+    sessionManager.currentColumn = null;
+
+    chrome.tabs.sendMessage(tabId, { action : "enable_krake"}, function(response){
+      isActive = true;
+      console.log("isActive: " + isActive);
+    });
+  }//eo if
 });
+
 
 var loadScript = function(filename){
   chrome.tabs.getSelected(null, function(tab) {
@@ -133,28 +148,30 @@ var addColumn = function(params, callback){
 };//eo addColumn
 
 var deleteColumn = function(params, callback){
-  try{
-    //console.log('-- before "deleteColumn"');
-    //console.log( JSON.stringify(sessionManager) );
+  //try{
+    console.log('-- before "deleteColumn"');
+    console.log( JSON.stringify(SharedKrake.getInstance()) );
     var deletedColumn;
 
     if(sessionManager.currentColumn && sessionManager.currentColumn.columnId == params.columnId){
+      console.log('if');
       deletedColumn = sessionManager.currentColumn;
       sessionManager.currentColumn = null;
       sessionManager.goToNextState('idle');
     }else{
-      SharedKrakeHelper.removeColumnFromSharedKrake(params.columnId);
+      console.log('else');
+      SharedKrakeHelper.removeColumn(params.columnId);
     }//eo if-else
 
-    //console.log('-- after "deleteColumn"');
-    //console.log( JSON.stringify(sessionManager) );
+    console.log('-- after "deleteColumn"');
+    console.log( JSON.stringify(SharedKrake.getInstance()) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager, deletedColumn: deletedColumn}); 
-  }catch(err){
-    console.log(err);
-    if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
-  }
+ // }catch(err){
+ //   console.log(err);
+ //   if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
+ // }
 };//eo deleteColumn
 
 /*

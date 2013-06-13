@@ -62,7 +62,7 @@ var UIColumnFactory = {
     if(elementLink)
     {
       var detailButtonImageUrl = "background-image: url(\"" +
-                               chrome.extension.getURL("skin/images/link.png") + 
+                               chrome.extension.getURL("images/link.png") + 
                                "\");";
 
       $detailPageLink = $("<a>", {  class: "k_panel krake-control-button krake-control-button-link",
@@ -82,7 +82,7 @@ var UIColumnFactory = {
       //create pagination
     }
     var deleteButtonImageUrl = "background-image: url(\"" +
-                               chrome.extension.getURL("skin/images/bin.png") + 
+                               chrome.extension.getURL("images/bin.png") + 
                                "\");";
     var $deleteButton = $("<button>", { class: "krake-control-button k_panel krake-control-button-delete",
                                         style: deleteButtonImageUrl });
@@ -91,10 +91,7 @@ var UIColumnFactory = {
     var $breadcrumb = $("<div>", { id: breadcrumbId,
                                    class: "krake-breadcrumb k_panel" });
 
-    ContentHelper.getBreadCrumbArrayForColumnWithId(columnId, 
-      function(object){
-        UIColumnFactory.createUIBreadcrumb($breadcrumb, object);
-      });
+
 
 
     var $columnName = $("<div>", { id: columnNameId, 
@@ -127,10 +124,14 @@ var UIColumnFactory = {
 
 
     $deleteButton.bind('click', function(){
+      alert("recreateUIColumn.deleteButton");
+      
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
           $(columnIdentifier).remove();
+          //remove highlights
+          UIElementSelector.unHighLightElements(response.deletedColumn);
         }   
       });
     });
@@ -330,7 +331,6 @@ var Panel = {
   showLink : function(column){
     if(column.selection1.elementType.toLowerCase() == 'a'){
       var selector = '#krake-column-control-' + column.columnId;
-      console.log(selector);
 
       var linkButtonImageUrl = "background-image: url(\"" + chrome.extension.getURL("images/link.png") + "\");";
 
@@ -338,9 +338,13 @@ var Panel = {
                                         style:  linkButtonImageUrl });
 
       $(selector).append($linkButton);
-
+     
       $linkButton.bind('click', function(){
-        
+        console.log('column.genericXpath := ' + column.genericXpath);
+        var results = KrakeHelper.evaluateQuery(column.genericXpath);
+
+        //console.log(results.nodesToHighlight[0].href);
+        window.location.href = results.nodesToHighlight[0].href;
       });
       /*
       $linkButton.bind('click', function(){
