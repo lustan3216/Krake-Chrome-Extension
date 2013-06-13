@@ -1,7 +1,8 @@
 var KrakeHelper = 
 {
-  // Returns [values, nodeCount]. Highlights result nodes, if applicable. Assumes
-  // no nodes are currently highlighted.
+  /*
+   * @Return: { text:string, nodeCount:string, nodesToHighlight:array }
+   */
   evaluateQuery: function(query)
   {
     var xpathResult = null;
@@ -53,8 +54,8 @@ var KrakeHelper =
              text: str,
              nodeCount: nodeCount,
              nodesToHighlight: nodesToHighlight
-           }
-    //return [str, nodeCount, nodesToHighlight];
+           };
+
   },//eo evaluateQuery
 
   clearElementHighlights: function()

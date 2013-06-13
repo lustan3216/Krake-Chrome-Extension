@@ -6,3 +6,73 @@
     color: #b3b3b3;
 }
 
+/*  column highlight colours  */
+.k_highlight_FFCC00 {
+  background-color: #FFCC00 !important;
+}
+
+.k_highlight_FF6600 {
+  background-color: #FF6600 !important;
+}
+
+.k_highlight_3EA99F {
+  background-color: #3EA99F !important;
+}
+
+.k_highlight_FF99FF {
+  background-color: #FF99FF !important;
+}
+
+.k_highlight_82CAFF {
+  background-color: #82CAFF !important;
+}
+
+.k_highlight_99CCFF {
+  background-color: #99CCFF !important;
+}
+
+.k_highlight_FF00FF {
+  background-color: #FF00FF !important;
+}
+
+.k_highlight_CC33FF {
+  background-color: #CC33FF !important;
+}
+
+.k_highlight_CCFF00 {
+  background-color: #CCFF00 !important;
+}
+
+.k_highlight_0099CC {
+  background-color: #0099CC !important;
+}
+
+.k_highlight_FFCCFF {
+  background-color: #FFCCFF !important;
+}
+
+.k_highlight_33FF33 {
+  background-color: #33FF33 !important;
+}
+
+.k_highlight_FFFF99 {
+  background-color: #FFFF99 !important;
+}
+
+img.k_highlight_FFCC00 
+img.k_highlight_FF6600 
+img.k_highlight_3EA99F
+img.k_highlight_FF99FF 
+img.k_highlight_82CAFF
+img.k_highlight_99CCFF
+img.k_highlight_FF00FF
+img.k_highlight_CC33FF
+img.k_highlight_FFCCCC
+img.k_highlight_CCFF00
+img.k_highlight_0099CC
+img.k_highlight_FFCCFF
+img.k_highlight_33FF33
+img.k_highlight_FFFF99
+{
+  opacity: 0.5 !important;
+}

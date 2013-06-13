@@ -115,9 +115,10 @@ var SharedKrake = (function(){
   };
 })();
 
-var ColorGenerator = {
-  colorArray : [ 
-    " k_highlight_FFCC00 ", //yellow
+
+var ColorGenerator = function(){
+  this.colorArray = 
+  [ " k_highlight_FFCC00 ", //yellow
     " k_highlight_FF6600 ", //orange
     " k_highlight_3EA99F ", //light green
     " k_highlight_FF99FF ", //light purple
@@ -130,13 +131,19 @@ var ColorGenerator = {
     " k_highlight_0099CC ",
     " k_highlight_FFCCFF ",
     " k_highlight_33FF33 ",
-    " k_highlight_FFFF99 " 
-  ],
+    " k_highlight_FFFF99 "
+  ];
 
-  getColor : function(){
-
-  }
 };//eo ColorGenerator
+
+
+ColorGenerator.prototype.getColor = function()
+{
+  var self = this;
+  var color = self.colorArray.shift();
+  self.colorArray.push(color);
+  return color; 
+}
 
 
 /*

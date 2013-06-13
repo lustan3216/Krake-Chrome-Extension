@@ -1,8 +1,10 @@
 /*************************************************************************/
 var ColumnFactory = {
   createColumn: function(params){
-    return new Column(params);
-  }
+    var column = new Column(params);
+    column.colorCode = colorGenerator.getColor();
+    return column;
+  }//eo createColumn
 };
 
 var Column = function(params){

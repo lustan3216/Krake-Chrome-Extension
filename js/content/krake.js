@@ -169,6 +169,8 @@ var UIColumnFactory = {
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
           $(columnIdentifier).remove();
+          //remove highlights
+          UIElementSelector.unHighLightElements(response.deletedColumn);
         }   
       });
     });
@@ -406,10 +408,10 @@ var UIElementSelector = {
               var sessionManager = response.session;
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
               chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
-                alert( JSON.stringify(response) );
-                if(respose.status == 'success'){
+                console.log( JSON.stringify(response) );
+                if(response.status == 'success'){
                   //highlight all elements depicted by genericXpath
-                  UIElementSelector.highlightElements(response.url, response.genericXpath);
+                  UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
                 }else{
                   //** notify users that xpaths of 2 selections are not matched **
                 }
@@ -422,10 +424,22 @@ var UIElementSelector = {
 
   },
 
-  highlightElements : function(url, genericXpath){
-    if(document.url != url) return;
+  highlightElements : function(url, genericXpath, colorCode){
+    if(document.URL != url) return;
+    
+    var result = KrakeHelper.evaluateQuery(genericXpath);
+    var nodes = result.nodesToHighlight;
 
+    for(var i=0; i<nodes.length; i++){
+      nodes[i].className += colorCode;
+    }
+  },
 
+  unHighLightElements : function(column){
+    if(document.URL != column.url) return;
+       
+    var selector = '.' + $.trim(column.colorCode);
+    $(selector).removeClass(column.colorCode);
   },
 
   /*

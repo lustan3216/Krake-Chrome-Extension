@@ -1,6 +1,7 @@
 var isActive = false;
 var sessionManager = null;
 var sharedKrake = null;
+var colorGenerator = null;
 
 /***************************************************************************/
 /*********************  Incoming Request Handler  **************************/
@@ -8,6 +9,10 @@ var sharedKrake = null;
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
     switch(request.action){
+      case 'get_column_by_id':
+        getColumnById(request.params, sendResponse);
+      break;
+
       case "update_url":
    
       break;
@@ -33,7 +38,6 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case 'match_pattern':
-        alert("match_pattern");
         matchPattern(sendResponse);
       break;
     }//eo switch
@@ -55,6 +59,7 @@ var handleIconClick = function handleIconClick(tab){
      isActive = true;
      sessionManager = new SessionManager();
      sharedKrake = SharedKrake.getInstance();
+     colorGenerator = new ColorGenerator();
    }
 
 };//eo handleIconClick
@@ -117,7 +122,7 @@ var addColumn = function(params, callback){
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager});  
   }catch(err){
-    concole.log(err);
+    console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
   }
 };//eo addColumn
@@ -126,8 +131,10 @@ var deleteColumn = function(params, callback){
   try{
     console.log('-- before "deleteColumn"');
     console.log( JSON.stringify(sessionManager) );
+    var deletedColumn;
 
-    if(sessionManager.currentColumn.columnId == params.columnId){
+    if(sessionManager.currentColumn && sessionManager.currentColumn.columnId == params.columnId){
+      deletedColumn = sessionManager.currentColumn;
       sessionManager.currentColumn = null;
       sessionManager.goToNextState('idle');
     }else{
@@ -138,7 +145,7 @@ var deleteColumn = function(params, callback){
     console.log( JSON.stringify(sessionManager) );
 
     if (callback && typeof(callback) === "function")  
-      callback({status: 'success', session: sessionManager}); 
+      callback({status: 'success', session: sessionManager, deletedColumn: deletedColumn}); 
   }catch(err){
     concole.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'}); 
@@ -182,14 +189,39 @@ var matchPattern = function(callback){
     //result => { status: 'success', genericXpath: array }
     var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
     sessionManager.currentColumn.genericXpath = result.genericXpath;
-    var response = result;
-    response.url = sessionManager.currentColumn.url;
+
+    var response = {
+      status : 'success',
+      column : sessionManager.currentColumn
+    }
     //tell content script to highlight all elements covered by generic xpath
     if (callback && typeof(callback) === "function")   callback(response); 
   }catch(err){
     console.log(err);
   }
-}
+};//eo matchPattern
+
+var getColumnById = function(params, callback){
+  try{
+    console.log("getColumnById");
+    console.log("sessionManager.currentColumn.id := " + sessionManager.currentColumn.id );
+    console.log("params.columnId := " + params.columnId);
+
+    if(sessionManager.currentColumn && sessionManager.currentColumn.id == params.columnId){
+      var response = {
+        status : 'success',
+        column : sessionManager.currentColumn
+      };
+    
+      if (callback && typeof(callback) === "function") callback(response); 
+    }else{
+      //search in sharedKrake for column
+    }
+
+  }catch(err){
+
+  }
+};//eo getColumnById
 
 
 
