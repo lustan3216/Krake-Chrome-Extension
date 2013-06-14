@@ -124,8 +124,6 @@ var UIColumnFactory = {
 
 
     $deleteButton.bind('click', function(){
-      alert("recreateUIColumn.deleteButton");
-
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
@@ -182,14 +180,16 @@ var UIColumnFactory = {
                               "\");";
 
     var $saveButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-save",
-                                        style:  saveButtonImageUrl });
+                                      style:  saveButtonImageUrl });
 
     $saveButton.bind('click', function(){
-      var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
-        console.log( JSON.stringify(response) );
         if(response.status == 'success'){
           //change save button to edit button
+          var columnIdentifier = "#krake-column-" + columnId; 
+          var selector = columnIdentifier + ' .krake-control-button-save';
+          $(selector).remove();
+          UIColumnFactory.addEditButton(columnId);
         }   
       });
     });
@@ -224,7 +224,22 @@ var UIColumnFactory = {
     return $wrapper;
   },//eo createColumn
    
- 
+  addEditButton : function(columnId){
+    //edit button
+    var editButtonImageUrl = "background-image: url(\"" +
+                               chrome.extension.getURL("images/edit.png") + 
+                              "\");";
+
+    var $editButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-edit",
+                                      style:  editButtonImageUrl });
+
+    $editButton.bind('click', function(){
+      alert("editButtonClicked");
+    });
+
+    var selector = "#krake-column-control-" + columnId; 
+    $(selector).append($editButton);
+  }
 
 
 };//eo UIColumnFactory

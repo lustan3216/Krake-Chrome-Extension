@@ -150,7 +150,7 @@ var addColumn = function(params, callback){
 var deleteColumn = function(params, callback){
   //try{
     console.log('-- before "deleteColumn"');
-    console.log( JSON.stringify(SharedKrake.getInstance()) );
+    console.log( JSON.stringify(SharedKrake) );
     var deletedColumn;
 
     if(sessionManager.currentColumn && sessionManager.currentColumn.columnId == params.columnId){
@@ -164,7 +164,7 @@ var deleteColumn = function(params, callback){
     }//eo if-else
 
     console.log('-- after "deleteColumn"');
-    console.log( JSON.stringify(SharedKrake.getInstance()) );
+    console.log( JSON.stringify(SharedKrake) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager, deletedColumn: deletedColumn}); 
@@ -212,7 +212,7 @@ var saveColumn = function(params, callback){
       sessionManager.goToNextState('idle');
 
       console.log('-- after "saveColumn"');
-      console.log( JSON.stringify(SharedKrake.getInstance()) );
+      console.log( JSON.stringify(SharedKrake) );
 
       if (callback && typeof(callback) === "function")  
         callback({status: 'success', session: sessionManager, sharedKrake: sharedKrake}); 
