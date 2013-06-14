@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case "add_column":
-        addColumn(request.params, sendResponse);
+        newColumn(request.params, sendResponse);
       break;
 
       case 'get_column_by_id':
@@ -132,12 +132,15 @@ var loadScript = function(filename){
   });
 };//eo loadScript
 
-var addColumn = function(params, callback){
+var newColumn = function(params, callback){
   try{
     //console.log('-- before "addColumn"');
     //console.log( JSON.stringify(sessionManager) );
 
     sessionManager.currentColumn = ColumnFactory.createColumn(params);
+    sessionManager.currentColumn.parentColumnId = sessionManager.previousColumn?  
+                                                  sessionManager.previousColumn.columnId : null;
+
     sessionManager.goToNextState();
 
     //console.log('-- after "addColumn"');
@@ -212,6 +215,7 @@ var saveColumn = function(params, callback){
   try{
     //validate currentColumn
     if(sessionManager.currentColumn.validate()){
+      sessionManager.previousColumn = sessionManager.currentColumn;
       SharedKrakeHelper.saveColumn(sessionManager.currentColumn);
       sessionManager.goToNextState('idle');
 

@@ -27,8 +27,6 @@
  */
 var SessionManager = function(){
   this.currentState = 'idle';
-
-  this.parentColumnId = null;
   this.previousColumn = null; //used for setting next_pager
   this.currentColumn = null;
 
@@ -104,6 +102,7 @@ var SharedKrake = {
     SharedKrake.columns = [];
   }
 };
+
 
 
 var ColorGenerator = function(){

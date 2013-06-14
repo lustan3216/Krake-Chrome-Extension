@@ -1,8 +1,35 @@
 var SharedKrakeHelper = {
+	
   saveColumn : function(column){
     console.log("addColumnToSharedKrake");
-    SharedKrake.columns.push(column);
+
+    if(!SharedKrake.originUrl)  
+      SharedKrake.originUrl = column.url;
+
+    if(!column.parentColumnId){
+      SharedKrake.columns.push(column);
+    }
+    else{
+      SharedKrakeHelper.addColumnToParentColumn(SharedKrake.columns, column);
+    }
   },//eo addColumnToSharedKrake
+
+  /*
+   * @Param: columns, columns of singleton sharedKrake object
+   * @Param: column, column to be added to sharedKrake
+   */
+  addColumnToParentColumn : function(columns, column){
+    for(var i=0; i<columns.length; i++){
+      if(columns[i].columnId == column.parentColumnId){
+        columns[i].options.columns.push(column);
+          return true;
+      }else{
+        var result = SharedKrakeHelper.addColumnToParentColumn(columns[i].options.columns, column);
+        if(result) return result;
+      }
+    }//eo for
+    return false;
+  },
   
   /*
    * @Return: { deletedColumn:obj, sharedKrake:obj }
