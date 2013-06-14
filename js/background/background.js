@@ -46,6 +46,10 @@ chrome.runtime.onMessage.addListener(
         saveColumn(request.params, sendResponse);
       break;
 
+      case 'stage_column':
+        stageColumn(request.params, sendResponse);
+      break;
+
       case 'match_pattern':
         matchPattern(sendResponse);
       break;
@@ -221,6 +225,10 @@ var saveColumn = function(params, callback){
 
   }
 };//eo saveButton
+
+var stageColumn = function(params, callback){
+  //search column by id from sharedKrake and place in sessionManager, ready for edit
+}///eo stageColumn
 
 var matchPattern = function(callback){
   try{

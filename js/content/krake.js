@@ -21,8 +21,7 @@
 /***************************************************************************/
 /************************** UI Column Factory  *****************************/
 /***************************************************************************/
-var UIColumnFactory = {
-  /*
+/*
    * @Param: params:object
    *         {
                columnId: string
@@ -33,6 +32,9 @@ var UIColumnFactory = {
                breadcrumb: string
              }
    */
+
+var UIColumnFactory = {
+  
 
   recreateUIColumn: function(params){
     
@@ -81,6 +83,18 @@ var UIColumnFactory = {
 
       //create pagination
     }
+
+    var editButtonImageUrl = "background-image: url(\"" +
+                               chrome.extension.getURL("images/edit.png") + 
+                              "\");";
+
+    var $editButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-edit",
+                                      style:  editButtonImageUrl });
+
+    $editButton.bind('click', function(){
+      alert("editButtonClicked");
+    });
+
     var deleteButtonImageUrl = "background-image: url(\"" +
                                chrome.extension.getURL("images/bin.png") + 
                                "\");";
@@ -136,7 +150,7 @@ var UIColumnFactory = {
 
     $columnControl = $columnControl.append($deleteButton);
 
-    $wrapper.append($columnControl.append($detailPageLink).append($deleteButton)).append($breadcrumb).append($columnName).append($firstSelection).append($secondSelection).append($thirdSelection);
+    $wrapper.append($columnControl.append($detailPageLink).append($deleteButton).append($editButton)).append($breadcrumb).append($columnName).append($firstSelection).append($secondSelection).append($thirdSelection);
 
     return $wrapper;
 
@@ -234,7 +248,9 @@ var UIColumnFactory = {
                                       style:  editButtonImageUrl });
 
     $editButton.bind('click', function(){
-      alert("editButtonClicked");
+      chrome.extension.sendMessage({ action: "stage_column", params : { columnId : columnId } }, function(response){
+        if(response.status == 'success'){ }
+      });
     });
 
     var selector = "#krake-column-control-" + columnId; 
