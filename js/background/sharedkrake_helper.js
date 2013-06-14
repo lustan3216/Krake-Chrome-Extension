@@ -1,7 +1,7 @@
 var SharedKrakeHelper = {
   saveColumn : function(column){
     console.log("addColumnToSharedKrake");
-    SharedKrake.getInstance().columns.push(column);
+    SharedKrake.columns.push(column);
   },//eo addColumnToSharedKrake
   
   /*
@@ -9,7 +9,7 @@ var SharedKrakeHelper = {
    */
   removeColumn: function(columnId){
     alert("removeColumnFromSharedKrake");
-    SharedKrakeHelper.removeColumnFromSharedKrake(SharedKrake.getInstance().columns, columnId);
+    SharedKrakeHelper.removeColumnFromSharedKrake(SharedKrake.columns, columnId);
   },//eo removeColumnFromSharedKrake
 
   removeColumnFromSharedKrake : function(columns, columnId){
@@ -26,7 +26,7 @@ var SharedKrakeHelper = {
   },
 
   findColumnById : function(columnId){
-    return SharedKrakeHelper.searchColumn(SharedKrake.getInstance().columns, columnId);
+    return SharedKrakeHelper.searchColumn(SharedKrake.columns, columnId);
   },//eo findColumnById
   
   searchColumn : function(columns, columnId){

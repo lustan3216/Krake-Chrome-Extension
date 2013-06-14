@@ -93,26 +93,17 @@ SessionManager.prototype.goToNextState = function(state){
 /************************  SharedKrake Object   ****************************/
 /***************************************************************************/
 
-var SharedKrake = (function(){
-  var instance = null;
-
-  function init(){
-    return {
-      originUrl: null,
-      destinationUrl: null,
-      columns: []
-    }; 
-  };//eo init
-
-  return{
-    getInstance: function(){
-      if(!instance){
-        instance = init();
-      }
-      return instance;
-    }
-  };
-})();
+var SharedKrake = {
+  originUrl : null,
+  destinationUrl : null,
+  columns:[],
+  
+  reset : function(){
+    SharedKrake.originUrl = null;
+    SharedKrake.destinationUrl = null;
+    SharedKrake.columns = [];
+  }
+};
 
 
 var ColorGenerator = function(){

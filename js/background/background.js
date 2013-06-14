@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case 'get_shared_krake':
-        sendResponse({ sharedKrake: SharedKrake.getInstance() });
+        sendResponse({ sharedKrake: SharedKrake });
       break;
 
       case "add_column":
@@ -67,7 +67,7 @@ var handleIconClick = function handleIconClick(tab){
      updateBrowserActionIcon();
      isActive = true;
      sessionManager = new SessionManager();
-     sharedKrake = SharedKrake.getInstance();
+     sharedKrake = SharedKrake;
      colorGenerator = new ColorGenerator();
    }
 

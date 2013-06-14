@@ -125,7 +125,7 @@ var UIColumnFactory = {
 
     $deleteButton.bind('click', function(){
       alert("recreateUIColumn.deleteButton");
-      
+
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
@@ -340,11 +340,18 @@ var Panel = {
       $(selector).append($linkButton);
      
       $linkButton.bind('click', function(){
-        console.log('column.genericXpath := ' + column.genericXpath);
-        var results = KrakeHelper.evaluateQuery(column.genericXpath);
-
-        //console.log(results.nodesToHighlight[0].href);
-        window.location.href = results.nodesToHighlight[0].href;
+        chrome.extension.sendMessage({ action:"get_session" }, function(response){
+          console.log( JSON.stringify(response) );
+          //if(response.session.currentColumn){
+              //notify user to save column first
+          //}else{
+            console.log("asdfasdf");
+            console.log('column.genericXpath := ' + column.genericXpath);
+            var results = KrakeHelper.evaluateQuery(column.genericXpath);
+            //console.log(results.nodesToHighlight[0].href);
+            window.location.href = results.nodesToHighlight[0].href;
+          //} 
+        });
       });
       /*
       $linkButton.bind('click', function(){
