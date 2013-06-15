@@ -26,6 +26,10 @@ chrome.runtime.onMessage.addListener(
         sendResponse({ sharedKrake: SharedKrake });
       break;
 
+      case 'get_breadcrumb':
+        getBreadcrumb(request.params, sendResponse);
+      break;
+
       case "add_column":
         newColumn(request.params, sendResponse);
       break;
@@ -102,7 +106,7 @@ var disableKrake = function(){
 };//eo disableKrake
 
 var clearCache = function(){
-  var sharedKrake = null;
+  SharedKrake.reset();
   var sessionManager = null;
 };
 
@@ -143,8 +147,8 @@ var newColumn = function(params, callback){
 
     sessionManager.goToNextState();
 
-    //console.log('-- after "addColumn"');
-    //console.log( JSON.stringify(sessionManager) );
+    console.log('-- after "addColumn"');
+    console.log( JSON.stringify(sessionManager) );
        
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager});  
@@ -185,7 +189,8 @@ var deleteColumn = function(params, callback){
  * @Param: params:object { attribute:"xpath_1", values:params } 
  */
 var editCurrentColumn = function(params, callback){
-  try{    console.log('-- before "editCurrentColumn"');
+  try{    
+    console.log('-- before "editCurrentColumn"');
     //console.log( JSON.stringify(sessionManager) );
    
     switch(params.attribute){
@@ -197,6 +202,10 @@ var editCurrentColumn = function(params, callback){
       case 'xpath_2':
         sessionManager.currentColumn.setSelection2(params.values);
         sessionManager.goToNextState(); //current state := 'post_selection_2'
+      break;
+
+      case 'column_name':
+       sessionManager.currentColumn.columnName = params.values.columnName;
       break;
     }//eo switch
     
@@ -217,9 +226,11 @@ var saveColumn = function(params, callback){
     if(sessionManager.currentColumn.validate()){
       sessionManager.previousColumn = sessionManager.currentColumn;
       SharedKrakeHelper.saveColumn(sessionManager.currentColumn);
+      sessionManager.currentColumn = null;
       sessionManager.goToNextState('idle');
 
       console.log('-- after "saveColumn"');
+      console.log( JSON.stringify(sessionManager) );
       console.log( JSON.stringify(SharedKrake) );
 
       if (callback && typeof(callback) === "function")  
@@ -232,7 +243,7 @@ var saveColumn = function(params, callback){
 
 var stageColumn = function(params, callback){
   //search column by id from sharedKrake and place in sessionManager, ready for edit
-}///eo stageColumn
+};///eo stageColumn
 
 var matchPattern = function(callback){
   try{
@@ -254,25 +265,44 @@ var matchPattern = function(callback){
 var getColumnById = function(params, callback){
   try{
     console.log("getColumnById");
-    console.log("sessionManager.currentColumn.id := " + sessionManager.currentColumn.id );
-    console.log("params.columnId := " + params.columnId);
+    console.log(JSON.stringify(params));
+    console.log("-- sessionManager");
+    console.log(JSON.stringify(sessionManager));
+    console.log('-- SharedKrake');
+    console.log(JSON.stringify(SharedKrake));
 
-    if(sessionManager.currentColumn && sessionManager.currentColumn.id == params.columnId){
-      var response = {
-        status : 'success',
-        column : sessionManager.currentColumn
-      };
-    
-      if (callback && typeof(callback) === "function") callback(response); 
+    if(sessionManager.currentColumn && sessionManager.currentColumn.columnId == params.columnId){
+      if (callback && typeof(callback) === "function") 
+        callback({ status : 'success', column : sessionManager.currentColumn }); 
     }else{
       //search in sharedKrake for column
-    }
-
+      var result = SharedKrakeHelper.findColumnByKey('columnId', params.columnId);
+      
+      if(result){
+        if (callback && typeof(callback) === "function") 
+          callback({ status : 'success', column: result }); 
+      }else{
+        if (callback && typeof(callback) === "function") 
+          callback({ status : 'error' }); 
+      }    
+    }//eo if-else
   }catch(err){
-
+    console.log(err);
   }
 };//eo getColumnById
 
+var getBreadcrumb = function(params, callback){
+  var result = SharedKrakeHelper.getBreadcrumbArray(params.columnId);
+  console.log('-- getBreadcrumb');
+  console.log( JSON.stringify(result) );
+  if(result){
+    if (callback && typeof(callback) === "function") 
+      callback({ status: 'success', breadcrumbArray: result });
+  }else{
+    if (callback && typeof(callback) === "function") 
+      callback({ status: 'error' });
+  } 
+};
 
 
 

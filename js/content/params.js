@@ -1,4 +1,4 @@
 var Params = {
   IMAGE_TEXT : '{image}',
-  DEFAULT_BREADCRUMB_TEXT : '*New Column Name*'
+  DEFAULT_COLUMN_NAME : '*New Column Name*'
 };//eo Params

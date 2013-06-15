@@ -63,22 +63,26 @@ var UIColumnFactory = {
 
     if(elementLink)
     {
-      var detailButtonImageUrl = "background-image: url(\"" +
-                               chrome.extension.getURL("images/link.png") + 
-                               "\");";
+      var selector = '#krake-column-control-' + columnId;
+      var linkButtonImageUrl = "background-image: url(\"" + chrome.extension.getURL("images/link.png") + "\");";
+      var $linkButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-link",
+                                        style:  linkButtonImageUrl });
 
-      $detailPageLink = $("<a>", {  class: "k_panel krake-control-button krake-control-button-link",
-                                    title: "Hyperlink detected\nClick to find more info",
-                                    href: elementLink,
-                                    style: detailButtonImageUrl});
-      $detailPageLink.click(
-        function(){
-          chrome.extension.sendMessage({ name: "set_parent_column_id", 
-                                       params: { parentColumnId: columnId } },
-          function(response){
-            window.location.href = elementLink; 
-          });  
+      $columnControl.append($linkButton);
+     
+      $linkButton.bind('click', function(){
+        chrome.extension.sendMessage({ action:"get_column_by_id", params: {columnId: columnId} }, function(response){
+          console.log( JSON.stringify(response) );
+          //if(response.session.currentColumn){
+              //notify user to save column first
+          //}else{
+            if(response.status == 'success'){
+              window.location.href = response.column.selection1.elementLink;
+            }
+            
+          //} 
         });
+      });//eo click
 
 
       //create pagination
@@ -215,7 +219,7 @@ var UIColumnFactory = {
     var $columnTitle = $("<div>", { id: columnTitleId, 
                                     class: "krake-column-row krake-column-title k_panel",
                                     contenteditable: "true", 
-                                    "data-placeholder": "asdf" });
+                                    "data-placeholder": Params.DEFAULT_COLUMN_NAME });
     
     var firstSelectionId = "krake-first-selection-" + columnId;
     var $firstSelection = $("<div>", { id: firstSelectionId,
@@ -302,6 +306,7 @@ var Panel = {
           if(response.status == 'success'){
             Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
+            Panel.addBreadCrumbToColumn(newColumnId);
           }else{
             //show warning to user
           }//eo if-else
@@ -330,6 +335,7 @@ var Panel = {
           if(response.status == 'success'){
             Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', newColumnId));
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
+            Panel.addBreadCrumbToColumn(newColumnId);
           }else{
             //show warning to user
           }//eo if-else
@@ -353,8 +359,19 @@ var Panel = {
       if(e.which == 13) {
         //update breadcrumb segment title
         var newColumnTitle = $(identifier).text();
-        //self.updateBreadcrumbSegmentTitle(columnId, $.trim(newColumnTitle));     
-        $(this).blur().next().focus();  return false;
+        //self.updateBreadcrumbSegmentTitle(columnId, $.trim(newColumnTitle)); 
+        var params = {
+          columnName : newColumnTitle
+        }
+        chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"column_name", values:params }}, function(response){
+          if(response.status == 'success'){
+            //update breadcrumb uri
+            alert("column title updated");
+            $(this).blur().next().focus();  return false;
+          }
+            
+        });
+        
       }
     }); 
   },
@@ -376,14 +393,13 @@ var Panel = {
           //if(response.session.currentColumn){
               //notify user to save column first
           //}else{
-            console.log("asdfasdf");
             console.log('column.genericXpath := ' + column.genericXpath);
             var results = KrakeHelper.evaluateQuery(column.genericXpath);
             //console.log(results.nodesToHighlight[0].href);
             window.location.href = results.nodesToHighlight[0].href;
           //} 
         });
-      });
+      });//eo click
       /*
       $linkButton.bind('click', function(){
         //show list of elements 
@@ -404,21 +420,42 @@ var Panel = {
       */
 
     }
-  }//eo showLink
+  },//eo showLink
 
+  addBreadCrumbToColumn : function(columnId){
+    chrome.extension.sendMessage({action: "get_breadcrumb", params:{columnId: columnId} }, function(response){
+      if(response.status == 'success'){
+        var breadcrumbArray = response.breadcrumbArray;
+        
+        var selector = "#k_column-breadcrumb-" + columnId;
+
+        for(var i=breadcrumbArray.length-1; i>=0; i--){
+          console.log("columnId:= " + breadcrumbArray[i].columnId + ", columnName:= " + breadcrumbArray[i].columnName);
+
+          $link = $("<a>", { class: "k_panel k_breadcrumb_link",  
+                            href: breadcrumbArray[i].url,
+                             text: breadcrumbArray[i].columnName }  );
+      
+     
+          var id = breadcrumbArray[i].columnId;
+          var href = breadcrumbArray[i].url;
+
+
+          $link.unbind('click').bind('click', function(e){
+            e.stopPropagation();
+            lert("uri clicked");
+          });
+
+          $(selector).append($link);
+
+          if(i != 0)
+            $(selector).append(" > ");
+        } 
+      }//eo if
+    }); 
+  }//eo addBreadCrumbToColumn
 };//eo Panel
-/*
-$saveButton.bind('click', function(){
-      var columnIdentifier = "#krake-column-" + columnId; 
-      chrome.extension.sendMessage({ action: "save_column" }, function(response){
-        console.log( JSON.stringify(response) );
-        if(response.status == 'success'){
-          //change save button to edit button
-        }   
-      });
-    });
 
-*/
  
 //courtesy of https://github.com/sprucemedia/jQuery.divPlaceholder.js
 (function ($) {
@@ -497,6 +534,10 @@ var UIElementSelector = {
             if(response.status == 'success'){
               var sessionManager = response.session;
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementText, elementPathResult.nodeName);
+
+              if(sessionManager.currentColumn.columnType == 'single'){
+                Panel.showLink(response.column);
+              }
             }
           });
         break;
