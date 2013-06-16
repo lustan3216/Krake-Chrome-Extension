@@ -366,7 +366,10 @@ var Panel = {
         chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"column_name", values:params }}, function(response){
           if(response.status == 'success'){
             //update breadcrumb uri
-            alert("column title updated");
+            var selector = '#k_column-breadcrumb-' + columnId + ' a';
+            var uriSelector = '#k_column-breadcrumb-' + columnId + ' a:nth-child(' + $(selector).length + ')' ;
+
+            $(uriSelector).html( newColumnTitle );
             $(this).blur().next().focus();  return false;
           }
             
@@ -423,6 +426,8 @@ var Panel = {
   },//eo showLink
 
   addBreadCrumbToColumn : function(columnId){
+    console.log('addBreadCrumbToColumn');
+
     chrome.extension.sendMessage({action: "get_breadcrumb", params:{columnId: columnId} }, function(response){
       if(response.status == 'success'){
         var breadcrumbArray = response.breadcrumbArray;
@@ -431,9 +436,11 @@ var Panel = {
 
         for(var i=breadcrumbArray.length-1; i>=0; i--){
           console.log("columnId:= " + breadcrumbArray[i].columnId + ", columnName:= " + breadcrumbArray[i].columnName);
+          
 
-          $link = $("<a>", { class: "k_panel k_breadcrumb_link",  
-                            href: breadcrumbArray[i].url,
+          $link = $("<a>", { id: i,
+                             class: "k_panel k_breadcrumb_link",  
+                             href: breadcrumbArray[i].url,
                              text: breadcrumbArray[i].columnName }  );
       
      
@@ -443,7 +450,6 @@ var Panel = {
 
           $link.unbind('click').bind('click', function(e){
             e.stopPropagation();
-            lert("uri clicked");
           });
 
           $(selector).append($link);

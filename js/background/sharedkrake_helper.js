@@ -44,7 +44,7 @@ var SharedKrakeHelper = {
     	console.log('column[i].columnId := ' + columns[i].columnId + ', columnId := ' + columnId);
       if(columns[i].columnId==columnId){
       	var deletedColumn = columns[i];
-      	
+
       	columns.splice(i, 1);
         return deletedColumn;
       }else{
@@ -100,25 +100,35 @@ var SharedKrakeHelper = {
    */
   getBreadcrumbArray : function(columnId){
     var breadcrumbArray = [];
+    var result;
 
-    if(!sessionManager.previousColumn)
-      return breadcrumbArray.push(sessionManager.currentColumn);
+    if(sessionManager.currentColumn){
+      result = SharedKrakeHelper.getBreadcrumbColumnArray(SharedKrake.columns, 
+    	                                                  sessionManager.currentColumn.parentColumnId, 
+    	                                                  breadcrumbArray, 
+    	                                                  SharedKrake.columns);
+    }else{
+      result = SharedKrakeHelper.getBreadcrumbColumnArray(SharedKrake.columns, 
+    	                                                  columnId, 
+    	                                                  breadcrumbArray, 
+    	                                                  SharedKrake.columns);
+    }
+    
+    if(result && sessionManager.currentColumn) 
+      result.unshift(sessionManager.currentColumn);
 
-    return SharedKrakeHelper.getBreadcrumbColumnArray(SharedKrake.columns, 
-    	                                              sessionManager.currentColumn.parentColumnId, 
-    	                                              breadcrumbArray, 
-    	                                              SharedKrake.columns);
+    return result? result : [sessionManager.currentColumn];
   },
   
   getBreadcrumbColumnArray : function(columns, columnId, breadcrumbColumnArray, originalColumns){
 
   	for(var i=0; i<columns.length; i++){
-  		console.log('column[' + i + '] := ' + columns[i].columnId + ', columnId := ' + columnId);
+  	  //console.log('column[' + i + '] := ' + columns[i].columnId + ', columnId := ' + columnId);
 
       if(columns[i].columnId==columnId){
         breadcrumbColumnArray.push(columns[i]);
         
-        console.log("hello getBreadcrumbColumnArray");
+        //console.log("hello getBreadcrumbColumnArray");
 
         if(columns[i].parentColumnId){
           var parentColumnId = columns[i].parentColumnId;

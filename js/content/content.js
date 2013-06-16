@@ -86,48 +86,12 @@ var populateColumns = function(wrapper, columns){
     params.breadcrumb = "";
 
     wrapper.append(UIColumnFactory.recreateUIColumn(params));
+    Panel.addBreadCrumbToColumn(columns[i].columnId);
+
     populateColumns(wrapper, columns[i].options.columns); //add UI columns to panel
 
     //elementUIManager.evaluateXpath(columns[i]); //highlight columns
   }
 };
-
-/*
-var renderPanelFromSharedKrake = function()
-{
-  chrome.extension.sendMessage( { name: "get_sharedKrake" },  function(response){
-      console.log("------ storage:krake -----");
-      console.log(JSON.stringify(response.sharedKrake));
-
-      var krake = response.sharedKrake;
-      var wrapper = $("#inner-wrapper");
-
-      populateColumns(wrapper, krake.columns);
-
-  });
-};
-
-var populateColumns = function(wrapper, columns)
-{
-  for(var i=0; i<columns.length; i++)
-  {
-    var params = {};
-    params.columnId = columns[i].columnId;
-    params.columnType = columns[i].columnType;
-    params.columnName = columns[i].columnName==null? "Enter Column Name" : columns[i].columnName;
-    params.firstSelectionText = columns[i].selection1.elementText; 
-    params.secondSelectionText = columns[i].selection2.elementText;
-    params.elementLink = columns[i].selection1.elementLink;
-    params.breadcrumb = "";
-
-    wrapper.append(UIColumnFactory.recreateUIColumn(params));
-    populateColumns(wrapper, columns[i].options.columns); //add UI columns to panel
-
-    elementUIManager.evaluateXpath(columns[i]); //highlight columns
-    
-  }
-
-};
-*/
 
 })();//eof
