@@ -23,7 +23,7 @@ var PatternMatcher = {
       genericXpathArray.push(element);
     }
     
-    var array = genericXpathArray.join("/");
-    return { status: 'success', genericXpath: array };
+    var genericXpath = genericXpathArray.join("/");
+    return { status: 'success', genericXpath: genericXpath };
   }//eo findGenericXpath
 }//eo brain

@@ -578,6 +578,7 @@ var UIElementSelector = {
 
   highlightElements : function(url, genericXpath, colorCode){
     console.log("-- highlightElements");
+    console.log(url + '\n' + genericXpath + '\n' + colorCode);
     if(document.URL != url) return;
     
     var result = KrakeHelper.evaluateQuery(genericXpath);

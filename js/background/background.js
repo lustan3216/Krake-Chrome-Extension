@@ -171,7 +171,7 @@ var deleteColumn = function(params, callback){
       sessionManager.goToNextState('idle');
     }else{
       console.log('else');
-      SharedKrakeHelper.removeColumn(params.columnId);
+      deletedColumn = SharedKrakeHelper.removeColumn(params.columnId);
     }//eo if-else
 
     console.log('-- after "deleteColumn"');
@@ -254,11 +254,12 @@ var stageColumn = function(params, callback){
 var matchPattern = function(callback){
   try{
     //result => { status: 'success', genericXpath: array }
-    if(sessionManager.currentColumn.columnType == 'list')
+    if(sessionManager.currentColumn.columnType == 'list'){
       var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
-    
-    sessionManager.currentColumn.genericXpath = sessionManager.currentColumn.selection1.xpath;;
-
+      sessionManager.currentColumn.genericXpath = result.genericXpath;
+    }else{
+      sessionManager.currentColumn.genericXpath = sessionManager.currentColumn.selection1.xpath;
+    }
     var response = {
       status : 'success',
       column : sessionManager.currentColumn

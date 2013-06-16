@@ -44,6 +44,7 @@ var SharedKrakeHelper = {
     	console.log('column[i].columnId := ' + columns[i].columnId + ', columnId := ' + columnId);
       if(columns[i].columnId==columnId){
       	var deletedColumn = columns[i];
+      	
       	columns.splice(i, 1);
         return deletedColumn;
       }else{
