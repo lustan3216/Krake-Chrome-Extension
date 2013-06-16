@@ -32,18 +32,20 @@ var SharedKrakeHelper = {
   },
   
   /*
-   * @Return: { deletedColumn:obj, sharedKrake:obj }
+   * @Return:  deletedColumn:obj
    */
   removeColumn: function(columnId){
-    alert("removeColumnFromSharedKrake");
-    SharedKrakeHelper.removeColumnFromSharedKrake(SharedKrake.columns, columnId);
+    console.log("removeColumnFromSharedKrake");
+    return SharedKrakeHelper.removeColumnFromSharedKrake(SharedKrake.columns, columnId);
   },//eo removeColumnFromSharedKrake
 
   removeColumnFromSharedKrake : function(columns, columnId){
     for(var i=0; i<columns.length; i++){
+    	console.log('column[i].columnId := ' + columns[i].columnId + ', columnId := ' + columnId);
       if(columns[i].columnId==columnId){
+      	var deletedColumn = columns[i];
       	columns.splice(i, 1);
-        return true;
+        return deletedColumn;
       }else{
         var result = SharedKrakeHelper.removeColumnFromSharedKrake(columns[i].options.columns, columnId);
         if(result) return result;

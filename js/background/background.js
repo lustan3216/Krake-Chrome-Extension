@@ -176,6 +176,8 @@ var deleteColumn = function(params, callback){
 
     console.log('-- after "deleteColumn"');
     console.log( JSON.stringify(SharedKrake) );
+    console.log('-- deletedColumn');
+    console.log( JSON.stringify(deletedColumn) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager, deletedColumn: deletedColumn}); 
@@ -206,6 +208,10 @@ var editCurrentColumn = function(params, callback){
 
       case 'column_name':
        sessionManager.currentColumn.columnName = params.values.columnName;
+      break;
+
+      case 'generic_xpath':
+        sessionManager.currentColumn.genericXpath = params.values.genericXpath;
       break;
     }//eo switch
     
@@ -248,8 +254,10 @@ var stageColumn = function(params, callback){
 var matchPattern = function(callback){
   try{
     //result => { status: 'success', genericXpath: array }
-    var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
-    sessionManager.currentColumn.genericXpath = result.genericXpath;
+    if(sessionManager.currentColumn.columnType == 'list')
+      var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
+    
+    sessionManager.currentColumn.genericXpath = sessionManager.currentColumn.selection1.xpath;;
 
     var response = {
       status : 'success',

@@ -390,14 +390,14 @@ var Panel = {
       $linkButton.bind('click', function(){
         chrome.extension.sendMessage({ action:"get_session" }, function(response){
           console.log( JSON.stringify(response) );
-          //if(response.session.currentColumn){
+          if(response.session.currentColumn){
               //notify user to save column first
-          //}else{
+          }else{
             console.log('column.genericXpath := ' + column.genericXpath);
             var results = KrakeHelper.evaluateQuery(column.genericXpath);
             //console.log(results.nodesToHighlight[0].href);
             window.location.href = results.nodesToHighlight[0].href;
-          //} 
+          } 
         });
       });//eo click
       /*
@@ -536,8 +536,18 @@ var UIElementSelector = {
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementText, elementPathResult.nodeName);
 
               if(sessionManager.currentColumn.columnType == 'single'){
-                Panel.showLink(response.column);
-              }
+                chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
+                  console.log( JSON.stringify(response) );
+                  if(response.status == 'success'){
+                    //highlight all elements depicted by genericXpath
+                    UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                    //display 'link' icon
+                    Panel.showLink(response.column);
+                  }else{
+                    //** notify users that xpaths of 2 selections are not matched **
+                  }
+                });
+              }//eo if
             }
           });
         break;
