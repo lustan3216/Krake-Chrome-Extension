@@ -8,6 +8,7 @@ var colorGenerator = null;
 /***************************************************************************/
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
+    console.log( JSON.stringify(sender) );
     switch(request.action){
 
       case "update_url":
@@ -15,7 +16,7 @@ chrome.runtime.onMessage.addListener(
       break;
 
       case "load_script":
-        loadScript(request.params.filename);
+        loadScript(request.params.filename, sender);
       break;
 
       case "get_session":
@@ -125,7 +126,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
   }//eo if
 });
 
-
+/*
 var loadScript = function(filename){
   chrome.tabs.getSelected(null, function(tab) {
     chrome.tabs.executeScript(tab.id, {file: filename}, function(){
@@ -134,6 +135,16 @@ var loadScript = function(filename){
       });
     });
   });
+};//eo loadScript
+*/
+var loadScript = function(filename, sender){
+  //chrome.tabs.getSelected(null, function(tab) {
+    chrome.tabs.executeScript(sender.tab.id, {file: filename}, function(){
+      chrome.tabs.sendMessage(sender.tab.id, { action: "load_script_done", params: { filename: filename } }, function(response){
+        
+      });
+    });
+  //});
 };//eo loadScript
 
 var newColumn = function(params, callback){
