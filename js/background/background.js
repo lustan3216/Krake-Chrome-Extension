@@ -126,25 +126,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
   }//eo if
 });
 
-/*
-var loadScript = function(filename){
-  chrome.tabs.getSelected(null, function(tab) {
-    chrome.tabs.executeScript(tab.id, {file: filename}, function(){
-      chrome.tabs.sendMessage(tab.id, { action: "load_script_done", params: { filename: filename } }, function(response){
-        
-      });
-    });
-  });
-};//eo loadScript
-*/
 var loadScript = function(filename, sender){
-  //chrome.tabs.getSelected(null, function(tab) {
     chrome.tabs.executeScript(sender.tab.id, {file: filename}, function(){
       chrome.tabs.sendMessage(sender.tab.id, { action: "load_script_done", params: { filename: filename } }, function(response){
         
       });
     });
-  //});
 };//eo loadScript
 
 var newColumn = function(params, callback){
