@@ -347,6 +347,8 @@ var Panel = {
 
   uiBtnEditPaginationClick : function(){
     console.log("uiBtnEditPaginationClick");
+
+   
   },
 
   uiBtnDoneClick : function(){
@@ -379,6 +381,34 @@ var Panel = {
     }); 
   },
 
+  showPaginationOption : function(column){
+    var selector = "#krake-third-selection-" + column.columnId;
+    var option = confirm("Has multiple pages?");
+    if(option){
+      var params = {
+        attribute : 'current_state',
+        values : {
+          state : 'pre_next_pager_selection'
+        }
+      }
+      
+      chrome.extension.sendMessage({ action: "save_column" }, function(response){
+        if(response.status == 'success'){
+          //remove save column button
+          var columnIdentifier = "#krake-column-" + column.columnId; 
+          var selector = columnIdentifier + ' .krake-control-button-save';
+          $(selector).remove();
+
+          chrome.extension.sendMessage({ action:"edit_session", params: params }, function(response){
+            if(response.status == 'success'){
+              UIElementSelector.mode = 'select_next_pager';
+            }
+          });
+        }
+      });
+    }//eo if
+  },
+
   showLink : function(column){
     if(column.selection1.elementType.toLowerCase() == 'a'){
       var selector = '#krake-column-control-' + column.columnId;
@@ -389,21 +419,6 @@ var Panel = {
                                         style:  linkButtonImageUrl });
 
       $(selector).append($linkButton);
-     /*
-      $linkButton.bind('click', function(){
-        chrome.extension.sendMessage({ action:"get_session" }, function(response){
-          console.log( JSON.stringify(response) );
-          if(response.session.currentColumn){
-              //notify user to save column first
-          }else{
-            console.log('column.genericXpath := ' + column.genericXpath);
-            var results = KrakeHelper.evaluateQuery(column.genericXpath);
-            //console.log(results.nodesToHighlight[0].href);
-            window.location.href = results.nodesToHighlight[0].href;
-          } 
-        });
-      });//eo click
-*/
 
       $linkButton.bind('click', function(){
         var params = {
@@ -490,6 +505,8 @@ var Panel = {
 /************************  UIElementSelector  ******************************/
 /***************************************************************************/
 var UIElementSelector = {
+  mode : 'select_element', //'select_element', 'select_next_pager'
+
   init : function(){
     UIElementSelector.attachElementHighlightListeners();
     console.log("UIElementSelector.init");
@@ -541,12 +558,22 @@ var UIElementSelector = {
       elementLink : elementPathResult.link
     };
   
-    chrome.extension.sendMessage({ action: "get_session"}, function(response){
+    chrome.extension.sendMessage({ action: 'get_session'}, function(response){
       var sessionManager = response.session;
       //console.log("--");
       //console.log(JSON.stringify(sessionManager));
-
+      
       switch(sessionManager.currentState){
+        case 'pre_next_pager_selection':
+          chrome.extension.sendMessage({ action:'edit_current_column', params: { attribute:'next_pager', values:params}}, function(response){
+            UIElementSelector.mode = 'select_element';
+            console.log('-- select next Pager');
+            console.log('status := ' + response.status);
+            console.log('-- session\n' + JSON.stringify(response.session));
+            console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
+          });
+        break;
+
         case 'pre_selection_1':
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
             if(response.status == 'success'){
@@ -559,6 +586,8 @@ var UIElementSelector = {
                   if(response.status == 'success'){
                     //highlight all elements depicted by genericXpath
                     UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                    //show pagination option
+                    Panel.showPaginationOption(response.column);
                     //display 'link' icon
                     Panel.showLink(response.column);
                   }else{
@@ -580,6 +609,8 @@ var UIElementSelector = {
                 if(response.status == 'success'){
                   //highlight all elements depicted by genericXpath
                   UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                  //show pagination option
+                  Panel.showPaginationOption(response.column);
                   //display 'link' icon
                   Panel.showLink(response.column);
                 }else{

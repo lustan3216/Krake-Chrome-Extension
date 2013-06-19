@@ -55,6 +55,11 @@ var SessionManager = function(){
       'before': 'pre_selection_2',
       'after': 'idle',
       'post_transition_event': undefined 
+    },
+    'pre_next_pager_selection' : {
+      'before': 'idle',
+      'after': 'idle',
+      'post_transition_event': undefined 
     }
   };//eo states
 };

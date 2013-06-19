@@ -68,7 +68,7 @@ var SharedKrakeHelper = {
     for(var i=0; i<columns.length; i++){
       console.log('columns['+ i +'][key] := ' + columns[i][key] + '\nvalue := ' + value);
       console.log('columns['+ i +'].selection1.elementLink := ' + columns[i].selection1.elementLink)
-      
+      //dirty hack, address this properly later
       if(key == 'elementLink' && columns[i].selection1.elementLink == value){
         return columns[i];
       }else if(columns[i][key] == value){
@@ -168,6 +168,31 @@ var SharedKrakeHelper = {
         return breadcrumbColumnArray;
       }else{
         var result = SharedKrakeHelper.getBreadcrumbColumnArray(columns[i].options.columns, columnId, breadcrumbColumnArray, originalColumns);
+        if(result) return result;
+      }
+    }//eo for
+    return null;
+  },//eo getBreadcrumbColumnArray
+
+  setNextPager : function(xpath){ 
+    console.log('setNextPager.xpath := ' + xpath);
+    return SharedKrakeHelper.addNextPagerToColumns(xpath, sharedKrake.columns);
+  },//ep setNextPager
+
+  addNextPagerToColumns: function(xpath, columns, options){
+    var columnId = sessionManager.previousColumn.columnId;
+
+    for(var i=0; i<columns.length; i++){
+      if(columns[i].columnId==columnId){
+        if(options == null){
+          sharedKrake.nextPager = { xpath: xpath };
+          return true;
+        }else{
+          options.nextPager = { xpath: xpath };
+        }
+        return columns[i];
+      }else{
+        var result = SharedKrakeHelper.addNextPagerToColumns(xpath, columns[i].options.columns, columns[i].options);
         if(result) return result;
       }
     }//eo for

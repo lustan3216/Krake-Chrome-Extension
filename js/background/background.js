@@ -9,11 +9,6 @@ var colorGenerator = null;
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse){
     switch(request.action){
-
-      case "update_url":
-   
-      break;
-
       case "load_script":
         loadScript(request.params.filename, sender);
       break;
@@ -162,6 +157,10 @@ var editSession = function(params, callback){
             sessionManager.previousColumn = SharedKrakeHelper.findColumnByKey('parentColumnId', column.parentColumnId);
         }
       break;
+
+      case 'current_state':
+        sessionManager.goToNextState(params.values.state);
+      break;
     }//eo switch
     
     console.log('-- after "editSession"');
@@ -220,7 +219,7 @@ var deleteColumn = function(params, callback){
       //console.log('else');
       deletedColumn = SharedKrakeHelper.removeColumn(params.columnId);
     }//eo if-else
-
+    sessionManager.currentColumn = null;
     console.log('-- after "deleteColumn"');
     //console.log( JSON.stringify(SharedKrake) );
     //console.log('-- deletedColumn');
@@ -260,13 +259,19 @@ var editCurrentColumn = function(params, callback){
       case 'generic_xpath':
         sessionManager.currentColumn.genericXpath = params.values.genericXpath;
       break;
+
+      case 'next_pager':
+      alert("editCurrentColumn.next_pager := " + JSON.stringify(params));
+        SharedKrakeHelper.setNextPager(params.values.xpath);
+        sessionManager.goToNextState(); //current state := 'idle'
+      break;
     }//eo switch
     
     //console.log('-- after "editCurrentColumn"');
     //console.log( JSON.stringify(sessionManager) );
 
     if (callback && typeof(callback) === "function")  
-      callback({status: 'success', session: sessionManager}); 
+      callback({status: 'success', session: sessionManager, sharedKrake: SharedKrake }); 
   }catch(err){
     console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'});
@@ -293,10 +298,6 @@ var saveColumn = function(params, callback){
 
   }
 };//eo saveButton
-
-var stageColumn = function(params, callback){
-  //search column by id from sharedKrake and place in sessionManager, ready for edit
-};///eo stageColumn
 
 var matchPattern = function(callback){
   try{
