@@ -2,6 +2,7 @@ var isActive = false;
 var sessionManager = null;
 var sharedKrake = null;
 var colorGenerator = null;
+var krakeTabId = null;
 
 /***************************************************************************/
 /*********************  Incoming Request Handler  **************************/
@@ -96,6 +97,7 @@ chrome.browserAction.onClicked.addListener(handleIconClick);
 /***************************************************************************/
 /**************************** Action Methods  ******************************/
 /***************************************************************************/
+
 var enableKrake = function(){
   chrome.tabs.getSelected(null, function(tab){
     chrome.tabs.sendMessage(tab.id, { action : "enable_krake"}, function(response){} );

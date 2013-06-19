@@ -311,9 +311,7 @@ var SharedKrakeHelper = {
    *          false: no column name found
    */
   getMappedColumnName : function(key){
-    console.log('CommonParams.ColumnNameMapper := ' + CommonParams.columnNameMapper);
     for(var columnKey in CommonParams.columnNameMapper){
-      console.log('columnKey := ' + columnKey);
       if( columnKey == key ){
         return CommonParams.columnNameMapper[columnKey];
       }

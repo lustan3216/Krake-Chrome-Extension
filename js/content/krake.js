@@ -406,7 +406,7 @@ var Panel = {
 
           chrome.extension.sendMessage({ action:"edit_session", params: params }, function(response){
             if(response.status == 'success'){
-              UIElementSelector.mode = 'select_next_pager';
+              
             }
           });
         }
