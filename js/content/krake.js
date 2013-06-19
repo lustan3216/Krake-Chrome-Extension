@@ -389,7 +389,7 @@ var Panel = {
                                         style:  linkButtonImageUrl });
 
       $(selector).append($linkButton);
-     
+     /*
       $linkButton.bind('click', function(){
         chrome.extension.sendMessage({ action:"get_session" }, function(response){
           console.log( JSON.stringify(response) );
@@ -403,26 +403,38 @@ var Panel = {
           } 
         });
       });//eo click
-      /*
+*/
+
       $linkButton.bind('click', function(){
-        //show list of elements 
-        var results = KrakeHelper.evaluateQuery(column.genericXpath);
-        
-        var linkList = '<div id="k-link-list-' + column.columnId + '" >';
-
-        for(var i=0; i<results.nodesToHighlight.length; i++){
-          linkList = linkList + '<a href="' + results.nodesToHighlight[i].href + '">' + 
-                     results.nodesToHighlight[i].innerHTML + '</a>';
-
+        var params = {
+          attribute : 'previous_column',
+          event : 'detail_link_clicked',
+          values : {
+            currentUrl : document.URL,
+            columnId : column.columnId,
+            elementLink : column.selection1.elementLink
+          }
         }
-        
-        linkList = linkList + '</div>';
-
-        //console.log(linkList);
-      });//eo bind
-      */
-
-    }
+      
+        chrome.extension.sendMessage({ action:"get_session" }, function(response){ 
+          console.log('-- get_session\n' + JSON.stringify(response) );
+          if(response.session.currentColumn){
+              //notify user to save column first
+          }else{
+          
+            chrome.extension.sendMessage({ action:'edit_session', params : params}, function(response){
+              if(response.status == 'success'){
+                alert('column.genericXpath := ' + column.genericXpath);
+                var results = KrakeHelper.evaluateQuery(column.genericXpath);
+                //console.log(results.nodesToHighlight[0].href);
+                window.location.href = results.nodesToHighlight[0].href;
+              } 
+            });
+          } 
+        });//eo sendMessage
+      });//eo click
+    }//eo if
+    
   },//eo showLink
 
   addBreadCrumbToColumn : function(columnId){

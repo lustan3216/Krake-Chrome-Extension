@@ -41,7 +41,7 @@ var SharedKrakeHelper = {
 
   removeColumnFromSharedKrake : function(columns, columnId){
     for(var i=0; i<columns.length; i++){
-    	console.log('column[i].columnId := ' + columns[i].columnId + ', columnId := ' + columnId);
+    	//console.log('column[i].columnId := ' + columns[i].columnId + ', columnId := ' + columnId);
       if(columns[i].columnId==columnId){
       	var deletedColumn = columns[i];
 
@@ -59,13 +59,39 @@ var SharedKrakeHelper = {
    * @Return: column:obj
    */
   findColumnByKey : function(key, value){
+    console.log("-- sharedKrake \n" + JSON.stringify(sharedKrake));
     return SharedKrakeHelper.searchColumnByKey(SharedKrake.columns, key, value);
   },
 
   searchColumnByKey : function(columns, key, value){
-  	console.log('key := ' + key);
+    //console.log('key := ' + key);
     for(var i=0; i<columns.length; i++){
-    	console.log('columns[i][key] := ' + columns[i][key] + ', value := ' + value);
+      console.log('columns['+ i +'][key] := ' + columns[i][key] + '\nvalue := ' + value);
+      console.log('columns['+ i +'].selection1.elementLink := ' + columns[i].selection1.elementLink)
+      
+      if(key == 'elementLink' && columns[i].selection1.elementLink == value){
+        return columns[i];
+      }else if(columns[i][key] == value){
+        console.log('columns[i].selection1.elementLink := ' + columns[i].selection1.elementLink)
+        return columns[i];
+      }else{
+        var result = SharedKrakeHelper.searchColumn(columns[i].options.columns, key, value);
+        if(result) return result;
+      }
+    }
+    return null;
+  },//eo searchColumn
+  
+
+/*
+  findColumnByKey : function(key, value){
+    return SharedKrakeHelper.searchColumnByKey(SharedKrake.columns, key, value);
+  },
+
+  searchColumnByKey : function(columns, key, value){
+  	//console.log('key := ' + key);
+    for(var i=0; i<columns.length; i++){
+    	//console.log('columns[i][key] := ' + columns[i][key] + ', value := ' + value);
       if(columns[i][key] == value){
 
         return columns[i];
@@ -76,7 +102,7 @@ var SharedKrakeHelper = {
     }
     return null;
   },//eo searchColumn
-
+*/
   //search column
   findColumnById : function(columnId){
     return SharedKrakeHelper.searchColumn(SharedKrake.columns, columnId);

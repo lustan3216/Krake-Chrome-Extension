@@ -29,10 +29,15 @@ chrome.extension.onMessage.addListener(
   	}//eo switch
   });
 
+var param = {
+  currentUrl : document.URL
+}
 
-var actionDispatcher = function(){
-  
-};//eo actionDispatcher
+chrome.extension.sendMessage({ action:'edit_session', params: { attribute:'previous_column', values:param }}, function(response){
+  if(response.status == 'success'){
+    console.log('-- edit_session');
+  }
+});
 
 
 $.fn.isExist = function(){
