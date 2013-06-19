@@ -177,7 +177,7 @@ var SharedKrakeHelper = {
   setNextPager : function(xpath){ 
     console.log('setNextPager.xpath := ' + xpath);
     return SharedKrakeHelper.addNextPagerToColumns(xpath, sharedKrake.columns);
-  },//ep setNextPager
+  },//eo setNextPager
 
   addNextPagerToColumns: function(xpath, columns, options){
     var columnId = sessionManager.previousColumn.columnId;
@@ -197,6 +197,128 @@ var SharedKrakeHelper = {
       }
     }//eo for
     return null;
-  }
+  },//eo addNextPagerToColumns
+
+  createScrapeDefinitionJSON : function(){
+    var krakeJson = {};
+
+    for(var key in sharedKrake){
+      var mappedColumnName = SharedKrakeHelper.getMappedColumnName(key);
+
+      switch(key){
+        case "originUrl":
+          krakeJson[mappedColumnName] = sharedKrake[key];
+        break;
+
+        case "columns":
+          var result = SharedKrakeHelper.createColumnsJson( sharedKrake.columns);
+          if(result)
+            krakeJson["columns"] = result;
+        break;
+
+        case "nextPager":
+          krakeJson[mappedColumnName] = sharedKrake[key];
+        break;
+      }//eo switch
+
+    }//eo for
+
+    return krakeJson;
+  },//eo createScrapeDefinitionJSON
+
+  createColumnsJson : function(columns){   
+    var columnArrayJson = [];
+
+    for(var i=0; i<columns.length; i++){
+      var columnJson = {};
+
+      for(var key in columns[i]){
+        var mappedColumnName = SharedKrakeHelper.getMappedColumnName(key);
+        console.log('key := ' + key + ', mappedColumnName := ' + mappedColumnName);
+        switch(key){
+          case "columnName":
+          case "genericXpath":
+          case "requiredAttribute":
+              if((columns[i])[key])
+                columnJson[mappedColumnName] = (columns[i])[key];
+          break;
+
+          case "options":
+            if(columns[i].options.columns.length>0){
+              var result = SharedKrakeHelper.createOptionsJson( columns[i].options ); 
+              if(result)
+                columnJson["options"] = result;
+            }
+          break;
+        }//eo switch
+
+      }//eo for
+
+      columnArrayJson.push( columnJson );
+    }//eo for  
+
+    return  columnArrayJson;
+
+  },
+
+  createOptionsJson : function(options){
+    if(options.columns.length == 0 || options.columns == null)  return null;
+    
+    var optionJson = {};
+    var columnArrayJson = [];
+
+    if(options.nextPager)
+      optionJson.next_page = options.nextPager;
+
+    for(var i=0; i<options.columns.length; i++){
+      var columnJson = {};
+
+      for(var key in options.columns[i]){
+        var mappedColumnName = SharedKrakeHelper.getMappedColumnName(key);
+        
+        switch(key){
+          case "columnName":
+          case "genericXpath":
+          case "requiredAttribute":
+              if((options.columns[i])[key])
+                columnJson[mappedColumnName] = (options.columns[i])[key];
+          break;
+
+          case "options":
+            if(options.columns[i].options.columns.length>0){
+              var result = SharedKrakeHelper.createOptionsJson( options.columns[i].options ); 
+              if(result)
+                columnJson["options"] = result;
+            }
+          break;
+        }//eo switch
+
+      }//eo for
+      
+      columnArrayJson.push( columnJson );
+
+    }//eo for
+
+    optionJson["columns"] = columnArrayJson;
+
+    return optionJson;
+  },
+
+
+  /*
+   * @Param: key:string, attributes of sharedKrake object
+   * @Return: Corresponding column name to be appeared in krake definition (JSON), or
+   *          false: no column name found
+   */
+  getMappedColumnName : function(key){
+    console.log('CommonParams.ColumnNameMapper := ' + CommonParams.columnNameMapper);
+    for(var columnKey in CommonParams.columnNameMapper){
+      console.log('columnKey := ' + columnKey);
+      if( columnKey == key ){
+        return CommonParams.columnNameMapper[columnKey];
+      }
+    }
+    return false;
+  }//eo getMappedColumnName
 
 };//eo SharedKrakeHelper

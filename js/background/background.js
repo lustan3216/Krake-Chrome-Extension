@@ -56,6 +56,10 @@ chrome.runtime.onMessage.addListener(
       case 'match_pattern':
         matchPattern(sendResponse);
       break;
+
+      case 'get_krake_json':
+        getKrakeJson(sendResponse);
+      break;
     }//eo switch
   });
 
@@ -131,6 +135,12 @@ var loadScript = function(filename, sender){
       });
     });
 };//eo loadScript
+
+var getKrakeJson = function(callback){
+  var json = SharedKrakeHelper.createScrapeDefinitionJSON();
+  if (callback && typeof(callback) === "function")  
+      callback({status: 'success', krakeDefinition: json, sharedKrake: SharedKrake });
+};//eo getKrakeJson
 
 /*
  * @Param: params:object { attribute:"xpath_1", values:params } 

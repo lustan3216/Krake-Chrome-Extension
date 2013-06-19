@@ -346,13 +346,18 @@ var Panel = {
   },
 
   uiBtnEditPaginationClick : function(){
-    console.log("uiBtnEditPaginationClick");
-
+    
    
   },
 
   uiBtnDoneClick : function(){
     console.log("uiBtnDoneClick");
+    chrome.extension.sendMessage({ action:'get_krake_json' }, function(response){
+      if(response.status == 'success'){
+        alert( JSON.stringify(response.krakeDefinition) );
+        console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
+      }
+    });
   },
 
   attachEnterKeyEventToColumnTitle : function(columnId){
