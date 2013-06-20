@@ -25,7 +25,11 @@ chrome.extension.onMessage.addListener(
           UIElementSelector.init();
           populatePreviousColumns();
           NotificationManager.init();
-          NotificationManager.showNotification('info', 'asdf');
+          NotificationManager.showNotification({
+            type : 'info',
+            //title : 'title test',
+            message : 'message test'
+          });
         }//eo if
       break;
 

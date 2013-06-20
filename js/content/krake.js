@@ -704,10 +704,26 @@ var NotificationManager = {
    *                title:string
    *                message:string
    */
+  /*
   showNotification : function(type, message){
     NotificationManager.hideAllMessages();
     $('.k_'+type).animate({top:"0"}, 500);
-  }
+  },
+  */
+  showNotification : function(params){
+    NotificationManager.hideAllMessages();
 
+    var notification = "";
+
+    if(params.title)
+      notification = notification + "<h3 class=\"k_panel\">" + params.title + "</h3>";
+
+    if(params.message)
+      notification = notification + "<p class=\"k_panel\">" + params.message + "</p>";
+
+    $('.k_'+params.type).html(notification);
+    $('.k_'+params.type).animate({top:"0"}, 500);
+  }
+  
 };//eo NotificationManager
 
