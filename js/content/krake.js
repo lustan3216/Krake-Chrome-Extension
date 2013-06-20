@@ -673,14 +673,41 @@ var UIElementSelector = {
     
   },
 
-         
-
-  selectNextPager : function(e){
-    e.preventDefault();
-  }
-  
-
-  
-
 };//eo UIElementSelector
+
+/***************************************************************************/
+/**************************  Notifications  ********************************/
+/***************************************************************************/
+
+var NotificationManager = {
+  myMessages : new Array('warning','error','success', 'info'),
+
+  init : function(){
+    // When message is clicked, hide it
+    $('.k_message').click(function(){      
+      $(this).animate({top: -$(this).outerHeight()}, 500);
+    });
+  },
+
+
+  hideAllMessages : function(){
+    var messagesHeights = new Array(); // this array will store height for each
+   
+    for (i=0; i<NotificationManager.myMessages.length; i++){
+      messagesHeights[i] = $('.k_' + NotificationManager.myMessages[i]).outerHeight(); // fill array
+      $('.k_' + NotificationManager.myMessages[i]).css('top', -messagesHeights[i]); //move element outside viewport   
+    }//eo for
+  },
+  /*
+   * @Param: params:obj
+   *                type:string message type 'warning','error','success', 'info'
+   *                title:string
+   *                message:string
+   */
+  showNotification : function(type, message){
+    NotificationManager.hideAllMessages();
+    $('.k_'+type).animate({top:"0"}, 500);
+  }
+
+};//eo NotificationManager
 

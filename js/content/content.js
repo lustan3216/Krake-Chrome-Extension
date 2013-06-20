@@ -1,5 +1,6 @@
 (function(){
 
+
 var panel = null;
 var elementUIManager = null;
 
@@ -23,6 +24,8 @@ chrome.extension.onMessage.addListener(
           Panel.init();
           UIElementSelector.init();
           populatePreviousColumns();
+          NotificationManager.init();
+          NotificationManager.showNotification('info', 'asdf');
         }//eo if
       break;
 
