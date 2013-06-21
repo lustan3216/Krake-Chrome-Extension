@@ -284,6 +284,12 @@ var Panel = {
     Panel.uiBtnSelectSingle.bind('click', Panel.uiBtnSelectSingleClick);
     Panel.uiBtnEditPagination.bind('click', Panel.uiBtnEditPaginationClick);
     Panel.uiBtnDone.bind('click', Panel.uiBtnDoneClick);
+
+    NotificationManager.showNotification({
+      type : 'info',
+      title : Params.NOTIFICATION_TITLE_IDLE,
+      message : Params.NOTIFICATION_MESSAGE_IDLE
+    });
   },
   
   uiBtnCreateListClick : function(){
@@ -307,6 +313,13 @@ var Panel = {
             Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
             Panel.addBreadCrumbToColumn(newColumnId);
+            
+            NotificationManager.showNotification({
+              type : 'info',
+              title : Params.NOTIFICATION_TITLE_PRE_SELECTION_1,
+              message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_1
+            });
+     
           }else{
             //show warning to user
           }//eo if-else
@@ -336,6 +349,12 @@ var Panel = {
             Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('single', newColumnId));
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
             Panel.addBreadCrumbToColumn(newColumnId);
+
+            NotificationManager.showNotification({
+              type : 'info',
+              title : Params.NOTIFICATION_TITLE_SINGLE_SELECTION,
+              message : Params.NOTIFICATION_MESSAGE_SINGLE_SELECTION
+            });
           }else{
             //show warning to user
           }//eo if-else
@@ -389,6 +408,7 @@ var Panel = {
   showPaginationOption : function(column){
     var selector = "#krake-third-selection-" + column.columnId;
     var option = confirm("Has multiple pages?");
+
     if(option){
       var params = {
         attribute : 'current_state',
@@ -399,6 +419,11 @@ var Panel = {
       
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
         if(response.status == 'success'){
+          NotificationManager.showNotification({
+            type : 'info',
+            title : Params.NOTIFICATION_TITLE_SELECT_NEXT_PAGER,
+            message : Params.NOTIFICATION_MESSAGE_SELECT_NEXT_PAGER
+          });
           //remove save column button
           var columnIdentifier = "#krake-column-" + column.columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';
@@ -570,6 +595,7 @@ var UIElementSelector = {
       
       switch(sessionManager.currentState){
         case 'pre_next_pager_selection':
+
           chrome.extension.sendMessage({ action:'edit_current_column', params: { attribute:'next_pager', values:params}}, function(response){
             UIElementSelector.mode = 'select_element';
             console.log('-- select next Pager');
@@ -580,23 +606,29 @@ var UIElementSelector = {
         break;
 
         case 'pre_selection_1':
+
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
             if(response.status == 'success'){
               var sessionManager = response.session;
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementText, elementPathResult.nodeName);
+              
+              NotificationManager.showNotification({
+                type : 'info',
+                title : Params.NOTIFICATION_TITLE_PRE_SELECTION_2,
+                message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_2
+              });
 
               if(sessionManager.currentColumn.columnType == 'single'){
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
                   console.log( JSON.stringify(response) );
                   if(response.status == 'success'){
+                    
                     //highlight all elements depicted by genericXpath
                     UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
                     //show pagination option
                     Panel.showPaginationOption(response.column);
                     //display 'link' icon
                     Panel.showLink(response.column);
-                  }else{
-                    //** notify users that xpaths of 2 selections are not matched **
                   }
                 });
               }//eo if
@@ -605,6 +637,7 @@ var UIElementSelector = {
         break;
 
         case 'pre_selection_2':
+        
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
             if(response.status == 'success'){
               var sessionManager = response.session;
@@ -612,15 +645,21 @@ var UIElementSelector = {
               chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
                 console.log( JSON.stringify(response) );
                 if(response.status == 'success'){
-                  //highlight all elements depicted by genericXpath
-                  UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
-                  //show pagination option
-                  Panel.showPaginationOption(response.column);
-                  //display 'link' icon
-                  Panel.showLink(response.column);
-                }else{
-                  //** notify users that xpaths of 2 selections are not matched **
-                }
+                  if(response.patternMatchingStatus != 'matched'){
+                    NotificationManager.showNotification({
+                      type : 'error',
+                      title : Params.NOTIFICATION_TITLE_SELECTIONS_NOT_MATCHED,
+                      message : Params.NOTIFICATION_MESSAGE_SELECTIONS_NOT_MATCHED
+                    });
+                  }else{
+                    //highlight all elements depicted by genericXpath
+                    UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                    //show pagination option
+                    Panel.showPaginationOption(response.column);
+                    //display 'link' icon
+                    Panel.showLink(response.column);
+                  }//eo if-else
+                }//eo if
               });
             }
           });
@@ -684,7 +723,7 @@ var NotificationManager = {
 
   init : function(){
     // When message is clicked, hide it
-    $('.k_message').click(function(){      
+    $('.k_message').click(function(){    
       $(this).animate({top: -$(this).outerHeight()}, 500);
     });
   },
@@ -704,12 +743,7 @@ var NotificationManager = {
    *                title:string
    *                message:string
    */
-  /*
-  showNotification : function(type, message){
-    NotificationManager.hideAllMessages();
-    $('.k_'+type).animate({top:"0"}, 500);
-  },
-  */
+
   showNotification : function(params){
     NotificationManager.hideAllMessages();
 
@@ -720,8 +754,18 @@ var NotificationManager = {
 
     if(params.message)
       notification = notification + "<p class=\"k_panel\">" + params.message + "</p>";
+ 
+    notification = notification +
+                   "<img id=\"k_message_close_button\" class=\"k_panel\" src=\"" + 
+                   chrome.extension.getURL("images/close.png") + 
+                   "\" alt=\"Smiley face\">";
 
     $('.k_'+params.type).html(notification);
+
+    $('#k_message_close_button').bind('click', function(e){
+      //trigger parent <div> click action
+    });
+
     $('.k_'+params.type).animate({top:"0"}, 500);
   }
   

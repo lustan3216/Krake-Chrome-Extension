@@ -25,11 +25,13 @@ chrome.extension.onMessage.addListener(
           UIElementSelector.init();
           populatePreviousColumns();
           NotificationManager.init();
+          /*
           NotificationManager.showNotification({
             type : 'info',
-            //title : 'title test',
+            title : 'title test',
             message : 'message test'
           });
+*/
         }//eo if
       break;
 

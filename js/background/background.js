@@ -61,6 +61,7 @@ chrome.runtime.onMessage.addListener(
       case 'get_krake_json':
         getKrakeJson(sendResponse);
       break;
+
     }//eo switch
   });
 
@@ -81,6 +82,7 @@ var handleIconClick = function handleIconClick(tab){
      sessionManager = new SessionManager();
      sharedKrake = SharedKrake;
      colorGenerator = new ColorGenerator();
+     clearCache();
    }
 
 };//eo handleIconClick
@@ -314,14 +316,16 @@ var saveColumn = function(params, callback){
 var matchPattern = function(callback){
   try{
     //result => { status: 'success', genericXpath: array }
+    var result;
     if(sessionManager.currentColumn.columnType == 'list'){
-      var result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
+      result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
       sessionManager.currentColumn.genericXpath = result.genericXpath;
     }else{
       sessionManager.currentColumn.genericXpath = sessionManager.currentColumn.selection1.xpath;
     }
     var response = {
       status : 'success',
+      patternMatchingStatus : result.status,
       column : sessionManager.currentColumn
     }
     //tell content script to highlight all elements covered by generic xpath

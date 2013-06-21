@@ -24,6 +24,6 @@ var PatternMatcher = {
     }
     
     var genericXpath = genericXpathArray.join("/");
-    return { status: 'success', genericXpath: genericXpath };
+    return { status: 'matched', genericXpath: genericXpath };
   }//eo findGenericXpath
 }//eo brain
