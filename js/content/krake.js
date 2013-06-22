@@ -626,18 +626,19 @@ var UIElementSelector = {
             if(response.status == 'success'){
               var sessionManager = response.session;
               UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 1, elementText, elementPathResult.nodeName);
-              
-              NotificationManager.showNotification({
-                type : 'info',
-                title : Params.NOTIFICATION_TITLE_PRE_SELECTION_2,
-                message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_2
-              });
+              //console.log( JSON.stringify(sessionManager) ); 
 
-              if(sessionManager.currentColumn.columnType == 'single'){
+              if(sessionManager.currentColumn.columnType == 'list'){
+                NotificationManager.showNotification({
+                  type : 'info',
+                  title : Params.NOTIFICATION_TITLE_PRE_SELECTION_2,
+                  message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_2
+                });
+              }else if(sessionManager.currentColumn.columnType == 'single'){
+                console.log( 'inside single' );
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
                   console.log( JSON.stringify(response) );
-                  if(response.status == 'success'){
-                    
+                  if(response.status == 'success'){ 
                     //highlight all elements depicted by genericXpath
                     UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
                     //show pagination option
@@ -652,7 +653,14 @@ var UIElementSelector = {
         break;
 
         case 'pre_selection_2':
-        
+          chrome.extension.sendMessage({ action: "get_session" }, function(response){
+            if(response.status == 'success'){
+              if(response.session.currentColumn.columnType == 'list')
+                editSelectionTwo(); 
+            }
+          });
+          
+          var editSelectionTwo = function(){
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
             if(response.status == 'success'){
               var sessionManager = response.session;
@@ -679,6 +687,7 @@ var UIElementSelector = {
               });
             }
           });
+          };//eo editSelectionTwo
         break;
       }//eo switch
     });

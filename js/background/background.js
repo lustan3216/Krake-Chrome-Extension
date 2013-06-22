@@ -315,19 +315,27 @@ var saveColumn = function(params, callback){
 
 var matchPattern = function(callback){
   try{
+    console.log( JSON.stringify(sessionManager) );
     //result => { status: 'success', genericXpath: array }
-    var result;
+    var result ={};
     if(sessionManager.currentColumn.columnType == 'list'){
       result = PatternMatcher.findGenericXpath(sessionManager.currentColumn.selection1, sessionManager.currentColumn.selection2);
       sessionManager.currentColumn.genericXpath = result.genericXpath;
     }else{
+      console.log('point 0');
+      console.log(sessionManager.currentColumn.selection1.xpath);
+      console.log(sessionManager.currentColumn.genericXpath);
+
       sessionManager.currentColumn.genericXpath = sessionManager.currentColumn.selection1.xpath;
+      result.status = 'matched';
+      console.log('point 1');
     }
     var response = {
       status : 'success',
       patternMatchingStatus : result.status,
       column : sessionManager.currentColumn
     }
+    console.log('point 2');
     //tell content script to highlight all elements covered by generic xpath
     if (callback && typeof(callback) === "function")   callback(response); 
   }catch(err){
