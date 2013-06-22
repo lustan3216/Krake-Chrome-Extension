@@ -303,7 +303,12 @@ var Panel = {
       var sessionManager = response.session;
 
       if(sessionManager.currentState != 'idle'){
-        alert("You must finish editing the previous column");
+        //alert("You must finish editing the previous column");
+        NotificationManager.showNotification({
+          type : 'error',
+          title : Params.NOTIFICATION_TITLE_PREVIOUS_COLUMN_NOT_SAVED,
+          message : Params.NOTIFICATION_MESSAGE_PREVIOUS_COLUMN_NOT_SAVED
+        });
       }else{
         var newColumnId = Panel.generateColumnId();
 
@@ -339,7 +344,12 @@ var Panel = {
       var sessionManager = response.session;
 
       if(sessionManager.currentState != 'idle'){
-        alert("You must finish editing the previous column");
+        //alert("You must finish editing the previous column");
+        NotificationManager.showNotification({
+          type : 'error',
+          title : Params.NOTIFICATION_TITLE_PREVIOUS_COLUMN_NOT_SAVED,
+          message : Params.NOTIFICATION_MESSAGE_PREVIOUS_COLUMN_NOT_SAVED
+        });
       }else{
         var newColumnId = Panel.generateColumnId();
 
@@ -661,32 +671,32 @@ var UIElementSelector = {
           });
           
           var editSelectionTwo = function(){
-          chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
-            if(response.status == 'success'){
-              var sessionManager = response.session;
-              UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
-              chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
-                console.log( JSON.stringify(response) );
-                if(response.status == 'success'){
-                  if(response.patternMatchingStatus != 'matched'){
-                    NotificationManager.showNotification({
-                      type : 'error',
-                      title : Params.NOTIFICATION_TITLE_SELECTIONS_NOT_MATCHED,
-                      message : Params.NOTIFICATION_MESSAGE_SELECTIONS_NOT_MATCHED
-                    });
-                  }else{
-                    //highlight all elements depicted by genericXpath
-                    UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
-                    //show pagination option
-                    Panel.showPaginationOption(response.column);
+            chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
+              if(response.status == 'success'){
+                var sessionManager = response.session;
+                UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
+                chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
+                  console.log( JSON.stringify(response) );
+                  if(response.status == 'success'){
+                    if(response.patternMatchingStatus != 'matched'){
+                      NotificationManager.showNotification({
+                        type : 'error',
+                        title : Params.NOTIFICATION_TITLE_SELECTIONS_NOT_MATCHED,
+                        message : Params.NOTIFICATION_MESSAGE_SELECTIONS_NOT_MATCHED
+                      });
+                    }else{
+                      //highlight all elements depicted by genericXpath
+                      UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
+                      //show pagination option
+                      Panel.showPaginationOption(response.column);
                     
-                    //display 'link' icon
-                    Panel.showLink(response.column);
-                  }//eo if-else
-                }//eo if
-              });
-            }
-          });
+                      //display 'link' icon
+                      Panel.showLink(response.column);
+                    }//eo if-else
+                  }//eo if
+                });
+              }
+            });
           };//eo editSelectionTwo
         break;
       }//eo switch

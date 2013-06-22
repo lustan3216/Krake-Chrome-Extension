@@ -2,6 +2,9 @@ var Params = {
   IMAGE_TEXT : '{image}',
   DEFAULT_COLUMN_NAME : '*New Column Name*',
 
+  NOTIFICATION_TITLE_PREVIOUS_COLUMN_NOT_SAVED : 'Ooops, there is an error!',
+  NOTIFICATION_MESSAGE_PREVIOUS_COLUMN_NOT_SAVED : 'Please complete the column selection and click the save button first',
+
   NOTIFICATION_TITLE_IDLE : 'Choose to make a list of items or select single item',
   NOTIFICATION_MESSAGE_IDLE : 'For more information, please refer xxx',
   
