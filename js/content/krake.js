@@ -142,6 +142,9 @@ var UIColumnFactory = {
 
 
     $deleteButton.bind('click', function(){
+      
+      NotificationManager.hideAllMessages();
+
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
@@ -182,6 +185,9 @@ var UIColumnFactory = {
                                         style:  deleteButtonImageUrl });
 
     $deleteButton.bind('click', function(){
+
+      NotificationManager.hideAllMessages();
+
       var columnIdentifier = "#krake-column-" + columnId; 
       chrome.extension.sendMessage({ action: "delete_column", params: { columnId: columnId } }, function(response){
         if(response.status == 'success'){
@@ -406,10 +412,19 @@ var Panel = {
   },
 
   showPaginationOption : function(column){
-    var selector = "#krake-third-selection-" + column.columnId;
-    var option = confirm("Has multiple pages?");
+    //show prompt
+    NotificationManager.showOptionsYesNo({
+      title: 'Has multiple pages?',
+      yesFunction : function(e){
+        NotificationManager.hideAllMessages();
+        selectNextPager();
+      },
+      noFunction : function(e){
+        NotificationManager.hideAllMessages();
+      }
+    });
 
-    if(option){
+    var selectNextPager = function(){
       var params = {
         attribute : 'current_state',
         values : {
@@ -656,6 +671,7 @@ var UIElementSelector = {
                     UIElementSelector.highlightElements(response.column.url, response.column.genericXpath, response.column.colorCode);
                     //show pagination option
                     Panel.showPaginationOption(response.column);
+                    
                     //display 'link' icon
                     Panel.showLink(response.column);
                   }//eo if-else
@@ -719,7 +735,7 @@ var UIElementSelector = {
 /***************************************************************************/
 
 var NotificationManager = {
-  myMessages : new Array('warning','error','success', 'info'),
+  myMessages : new Array('warning','error','success', 'info', 'option'),
 
   init : function(){
     // When message is clicked, hide it
@@ -736,6 +752,7 @@ var NotificationManager = {
       messagesHeights[i] = $('.k_' + NotificationManager.myMessages[i]).outerHeight(); // fill array
       $('.k_' + NotificationManager.myMessages[i]).css('top', -messagesHeights[i]); //move element outside viewport   
     }//eo for
+
   },
   /*
    * @Param: params:obj
@@ -767,6 +784,32 @@ var NotificationManager = {
     });
 
     $('.k_'+params.type).animate({top:"0"}, 500);
+  },
+  /*
+   * @Param: params:obj
+   *                title:string message type 'warning','error','success', 'info'
+   *                message:string
+   *                yesFunction:function
+   *                noFunction:function
+   */
+  showOptionsYesNo : function(params){
+    NotificationManager.hideAllMessages();
+
+    if(params.title)
+      $('.k_option>h3').html(params.title);
+
+    if(params.message)
+      $('.k_option>p').html(params.message);
+    
+    if (params.yesFunction && typeof(params.yesFunction) === "function") 
+      $('#k_option_yes').unbind('click').bind('click', params.yesFunction);
+
+    if (params.noFunction && typeof(params.noFunction) === "function")
+      $('#k_option_no').unbind('click').bind('click', params.noFunction);
+
+    //$('#k_message_close_button').attr("src", chrome.extension.getURL("images/close.png"));
+    
+    $('.k_option').animate({top:"0"}, 500);
   }
   
 };//eo NotificationManager
