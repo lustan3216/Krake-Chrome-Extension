@@ -663,14 +663,15 @@ var UIElementSelector = {
         break;
 
         case 'pre_selection_2':
+          console.log('pre_selection_2');
+
           chrome.extension.sendMessage({ action: "get_session" }, function(response){
-            if(response.status == 'success'){
-              if(response.session.currentColumn.columnType == 'list')
-                editSelectionTwo(); 
-            }
+            if(response.session.currentColumn.columnType == 'list')
+              editSelectionTwo();         
           });
           
           var editSelectionTwo = function(){
+            console.log('checkpoint 2');
             chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
               if(response.status == 'success'){
                 var sessionManager = response.session;
