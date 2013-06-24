@@ -213,7 +213,8 @@ var UIColumnFactory = {
           var columnIdentifier = "#krake-column-" + columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';
           $(selector).remove();
-          UIColumnFactory.addEditButton(columnId);
+          NotificationManager.hideAllMessages();
+          //UIColumnFactory.addEditButton(columnId);
         }   
       });
     });
@@ -421,6 +422,10 @@ var Panel = {
     }); 
   },
 
+  showNextPagerSelectionDone : function(columnId){
+    $('#krake-third-selection-'+columnId).append('Next pager selected!');
+  },
+
   showPaginationOption : function(column){
     //show prompt
     NotificationManager.showOptionsYesNo({
@@ -623,10 +628,12 @@ var UIElementSelector = {
 
           chrome.extension.sendMessage({ action:'edit_current_column', params: { attribute:'next_pager', values:params}}, function(response){
             UIElementSelector.mode = 'select_element';
-            console.log('-- select next Pager');
-            console.log('status := ' + response.status);
-            console.log('-- session\n' + JSON.stringify(response.session));
-            console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
+            Panel.showNextPagerSelectionDone(response.session.previousColumn.columnId);
+            
+            //console.log('-- select next Pager');
+            //console.log('status := ' + response.status);
+            //console.log('-- session\n' + JSON.stringify(response.session));
+            //console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
           });
         break;
 
@@ -654,7 +661,7 @@ var UIElementSelector = {
                     //show pagination option
                     Panel.showPaginationOption(response.column);
                     //display 'link' icon
-                    Panel.showLink(response.column);
+                    //Panel.showLink(response.column);
                   }
                 });
               }//eo if
@@ -692,7 +699,7 @@ var UIElementSelector = {
                       Panel.showPaginationOption(response.column);
                     
                       //display 'link' icon
-                      Panel.showLink(response.column);
+                      //Panel.showLink(response.column);
                     }//eo if-else
                   }//eo if
                 });
