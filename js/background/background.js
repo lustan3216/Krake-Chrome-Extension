@@ -5,6 +5,20 @@ var colorGenerator = null;
 var krakeTabId = null;
 
 /***************************************************************************/
+/******************************  MixPanel **********************************/
+/***************************************************************************/
+if(window.localStorage && localStorage.getItem('first_install') != 'yes'){
+  (function(){
+    mixpanel.track("developer - extension installed - browser", {
+      'extension_version' : chrome.runtime.getManifest().version
+    });
+    //console.log('executed');
+    localStorage.setItem('first_install', 'yes');
+    console.log('-- inside first install := ' + localStorage.getItem('first_install'));
+  })();
+};//eo mixpanel
+
+/***************************************************************************/
 /*********************  Incoming Request Handler  **************************/
 /***************************************************************************/
 chrome.runtime.onMessage.addListener(

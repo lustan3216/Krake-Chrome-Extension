@@ -1,6 +1,7 @@
 {
    "background": {
-      "scripts": [ "js/libs/jquery/jquery_1.9.1.min.js", 
+      "scripts": [ "js/libs/mixpanel/mixpanel.js",
+                   "js/libs/jquery/jquery_1.9.1.min.js", 
                    "js/background/params.js", 
                    "js/background/sharedkrake_helper.js",
                    "js/background/session_manager.js",
@@ -40,10 +41,10 @@
    },
    "manifest_version": 2,
    "name": "Krake.IO",
-   "permissions": [ 
-                    "contextMenus", 
+   "permissions": [ "contextMenus", 
                     "tabs", 
                     "http://*/*", 
                     "https://*/*"],
+   "content_security_policy": "script-src 'self' https://cdn.mxpnl.com; object-src 'self'",
    "version": "1.0"
 }
