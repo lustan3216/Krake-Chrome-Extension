@@ -77,6 +77,9 @@ chrome.runtime.onMessage.addListener(
         getKrakeJson(sendResponse);
       break;
 
+      case 'fire_mixpanel_event':
+        executeMixpanelEvent(request.params.eventNumber);
+      break;
     }//eo switch
   });
 
@@ -399,6 +402,21 @@ var getBreadcrumb = function(params, callback){
     if (callback && typeof(callback) === "function") 
       callback({ status: 'error' });
   } 
+};//eo getBreadcrumb
+
+var executeMixpanelEvent = function(eventNumber, callback){
+  switch(eventNumber){
+    case 'event_4':
+      MixpanelEvents.event_4();
+    break;
+
+    case 'event_5':
+      MixpanelEvents.event_5();
+    break;
+
+    default:
+      console.log('** invalid mixpanel event type **');
+  }//eo switch
 };
 
 

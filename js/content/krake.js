@@ -287,7 +287,9 @@ var Panel = {
 
   init : function(){
     Panel.uiBtnCreateList.bind('click', Panel.uiBtnCreateListClick);
+    Panel.uiBtnCreateList.bind('click', {eventNumber: 'event_4'}, KrakeHelper.triggerMixpanelEvent);
     Panel.uiBtnSelectSingle.bind('click', Panel.uiBtnSelectSingleClick);
+    Panel.uiBtnSelectSingle.bind('click', {eventNumber: 'event_5'}, KrakeHelper.triggerMixpanelEvent);
     Panel.uiBtnEditPagination.bind('click', Panel.uiBtnEditPaginationClick);
     Panel.uiBtnDone.bind('click', Panel.uiBtnDoneClick);
 
@@ -378,11 +380,6 @@ var Panel = {
       }//eo if-else 
     });
     
-  },
-
-  uiBtnEditPaginationClick : function(){
-    
-   
   },
 
   uiBtnDoneClick : function(){
