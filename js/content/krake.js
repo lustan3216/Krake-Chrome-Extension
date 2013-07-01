@@ -636,16 +636,18 @@ var UIElementSelector = {
               //console.log( JSON.stringify(sessionManager) ); 
 
               if(sessionManager.currentColumn.columnType == 'list'){
+                //send mixpanel request
+                KrakeHelper.triggerMixpanelEvent(null, 'event_6');
                 //show notification 
                 NotificationManager.showNotification({
                   type : 'info',
                   title : Params.NOTIFICATION_TITLE_PRE_SELECTION_2,
                   message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_2
                 });
-                //send mixpanel request
-                KrakeHelper.triggerMixpanelEvent(null, 'event_6');
               }else if(sessionManager.currentColumn.columnType == 'single'){
-                console.log( 'inside single' );
+                //send mixpanel request
+                KrakeHelper.triggerMixpanelEvent(null, 'event_8');
+
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
                   console.log( JSON.stringify(response) );
                   if(response.status == 'success'){ 

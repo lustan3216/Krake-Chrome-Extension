@@ -117,5 +117,17 @@ var MixpanelEvents = {
         'select_type' : 'list_second_item'
       });//eo mixpanel.track
     }); 
+  },
+  /*
+   * This event is emitted each time an item is selected when in single item mode is activated
+   */
+  event_8 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension item selected", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url,
+        'select_type' : 'single_item'
+      });//eo mixpanel.track
+    }); 
   }
 };//eo MixpanelEvents
