@@ -93,5 +93,29 @@ var MixpanelEvents = {
         'select_type' : 'single_type'
       });//eo mixpanel.track
     }); 
+  },
+  /*
+   * This event is emitted each time a first item is selected when in make list of items mode is activated
+   */
+  event_6 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension item selected", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url,
+        'select_type' : 'list_first_item'
+      });//eo mixpanel.track
+    }); 
+  },
+  /*
+   * This event is emitted each time a second item is selected when in make list of items mode is activated
+   */
+  event_7 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension item selected", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url,
+        'select_type' : 'list_second_item'
+      });//eo mixpanel.track
+    }); 
   }
 };//eo MixpanelEvents

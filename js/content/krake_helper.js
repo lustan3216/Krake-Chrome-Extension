@@ -1,10 +1,13 @@
 var KrakeHelper = 
 {
-  triggerMixpanelEvent : function(e){
-    var params = e.data;
-    alert('mixpanel params := ' + JSON.stringify(params));
+  triggerMixpanelEvent : function(e, eventNumber){
+    var _eventNumber = e? e.data.eventNumber : eventNumber;
+    console.log('e := ' + e);
+    console.log('event number := ' + eventNumber);
+    console.log('_eventNumber := '+ _eventNumber);
+
     chrome.extension.sendMessage({ action: "fire_mixpanel_event", 
-                                   params: { eventNumber : params.eventNumber } });
+                                   params: { eventNumber : _eventNumber } });
   },//eo mixpanel
   /*
    * @Return: { text:string, nodeCount:string, nodesToHighlight:array }

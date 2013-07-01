@@ -636,11 +636,14 @@ var UIElementSelector = {
               //console.log( JSON.stringify(sessionManager) ); 
 
               if(sessionManager.currentColumn.columnType == 'list'){
+                //show notification 
                 NotificationManager.showNotification({
                   type : 'info',
                   title : Params.NOTIFICATION_TITLE_PRE_SELECTION_2,
                   message : Params.NOTIFICATION_MESSAGE_PRE_SELECTION_2
                 });
+                //send mixpanel request
+                KrakeHelper.triggerMixpanelEvent(null, 'event_6');
               }else if(sessionManager.currentColumn.columnType == 'single'){
                 console.log( 'inside single' );
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
@@ -671,6 +674,9 @@ var UIElementSelector = {
             console.log('checkpoint 2');
             chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
               if(response.status == 'success'){
+                //send mixpanel request
+                KrakeHelper.triggerMixpanelEvent(null, 'event_7');
+
                 var sessionManager = response.session;
                 UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
