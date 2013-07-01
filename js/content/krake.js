@@ -211,16 +211,21 @@ var UIColumnFactory = {
                                       style:  saveButtonImageUrl });
 
     $saveButton.bind('click', function(){
-      //send mixpanel request
-      KrakeHelper.triggerMixpanelEvent(null, 'event_9');
-
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
         if(response.status == 'success'){
-          //change save button to edit button
+          //send mixpanel request
+          KrakeHelper.triggerMixpanelEvent(null, 'event_9');
+
           var columnIdentifier = "#krake-column-" + columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';
           $(selector).remove();
           //UIColumnFactory.addEditButton(columnId);
+        }else{
+          NotificationManager.showNotification({
+            type : 'error',
+            title : Params.NOTIFICATION_TITLE_SAVE_COLUMN_FAILED,
+            message : Params.NOTIFICATION_MESSAGE_SAVE_COLUMN_FAILED
+          });
         }   
       });
     });

@@ -326,6 +326,9 @@ var saveColumn = function(params, callback){
 
       if (callback && typeof(callback) === "function")  
         callback({status: 'success', session: sessionManager, sharedKrake: sharedKrake}); 
+    }else{
+      if (callback && typeof(callback) === "function")  
+        callback({status: 'error', session: sessionManager, sharedKrake: sharedKrake});
     }
   }catch(err){
 

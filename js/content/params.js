@@ -21,5 +21,8 @@ var Params = {
   NOTIFICATION_MESSAGE_SELECTIONS_NOT_MATCHED : '[1] Repeating selection of the same DOM element, and/or [2] Two selections are of different element type',
   
   NOTIFICATION_TITLE_SELECT_NEXT_PAGER : 'Select next pager',
-  NOTIFICATION_MESSAGE_SELECT_NEXT_PAGER : 'Select a > or next button'
+  NOTIFICATION_MESSAGE_SELECT_NEXT_PAGER : 'Select a > or next button',
+
+  NOTIFICATION_TITLE_SAVE_COLUMN_FAILED : 'Failed to save column',
+  NOTIFICATION_MESSAGE_SAVE_COLUMN_FAILED : 'Please ensure the item selection is completed before saving the column'
 };//eo Params
