@@ -129,5 +129,27 @@ var MixpanelEvents = {
         'select_type' : 'single_item'
       });//eo mixpanel.track
     }); 
+  },
+  /*
+   * This event is emitted each time an item is selected when the column save button is clicked
+   */
+  event_9 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension column saved", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url
+      });//eo mixpanel.track
+    }); 
+  },
+  /*
+   * This event is emitted each time an item is selected when the column delete button is clicked
+   */
+  event_10 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension column deleted", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url
+      });//eo mixpanel.track
+    }); 
   }
 };//eo MixpanelEvents

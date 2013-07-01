@@ -142,7 +142,9 @@ var UIColumnFactory = {
 
 
     $deleteButton.bind('click', function(){
-      
+      //send mixpanel request
+      KrakeHelper.triggerMixpanelEvent(null, 'event_10');
+
       NotificationManager.hideAllMessages();
 
       var columnIdentifier = "#krake-column-" + columnId; 
@@ -185,6 +187,8 @@ var UIColumnFactory = {
                                         style:  deleteButtonImageUrl });
 
     $deleteButton.bind('click', function(){
+      //send mixpanel request
+      KrakeHelper.triggerMixpanelEvent(null, 'event_10');
 
       NotificationManager.hideAllMessages();
 
@@ -207,6 +211,9 @@ var UIColumnFactory = {
                                       style:  saveButtonImageUrl });
 
     $saveButton.bind('click', function(){
+      //send mixpanel request
+      KrakeHelper.triggerMixpanelEvent(null, 'event_9');
+
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
         if(response.status == 'success'){
           //change save button to edit button

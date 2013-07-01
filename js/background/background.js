@@ -426,6 +426,18 @@ var executeMixpanelEvent = function(eventNumber, callback){
       MixpanelEvents.event_8();
     break;
 
+    case 'event_9':
+      MixpanelEvents.event_9();
+    break;
+
+    case 'event_10':
+      MixpanelEvents.event_10();
+    break;
+
+    case 'event_11':
+      MixpanelEvents.event_11();
+    break;
+
     default:
       console.log('** invalid mixpanel event type **');
   }//eo switch
