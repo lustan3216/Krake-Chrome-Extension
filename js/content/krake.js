@@ -159,7 +159,7 @@ var UIColumnFactory = {
 
     $columnControl = $columnControl.append($deleteButton);
 
-    $wrapper.append($columnControl.append($detailPageLink).append($deleteButton).append($editButton)).append($breadcrumb).append($columnName).append($firstSelection).append($secondSelection).append($thirdSelection);
+    $wrapper.append($columnControl.append($detailPageLink).append($deleteButton)).append($breadcrumb).append($columnName).append($firstSelection).append($secondSelection).append($thirdSelection);
 
     return $wrapper;
 
@@ -220,7 +220,7 @@ var UIColumnFactory = {
           var columnIdentifier = "#krake-column-" + columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';
           $(selector).remove();
-          UIColumnFactory.addEditButton(columnId);
+          //UIColumnFactory.addEditButton(columnId);
         }   
       });
     });
