@@ -40,3 +40,58 @@
     }
 })(document, window.mixpanel || []);
 mixpanel.init("6739c9644606bc42c8ac134c22e1d691");
+
+
+/***************************************************************************/
+/******************************  MixPanel **********************************/
+/***************************************************************************/
+var MixpanelEvents = {
+  /*
+   * This event is emitted each time the KRAKE button on the top right hand corner is clicked
+   * to bring up the embedded KRAKE console
+   */
+  event_2 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {
+      mixpanel.track("developer - extension activated", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url
+      });//eo mixpanel.track
+    });  
+  },
+  /*
+   * This event is emitted each time the KRAKE button on the top right hand corner is clicked 
+   * to disable the embedded KRAKE console
+   */
+  event_3 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {
+      mixpanel.track("developer - extension deactivated", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url
+      });//eo mixpanel.track
+    }); 
+  },
+  /*
+   * This event is emitted each time the "Make of list of items" button on the lower left hand corner is clicked
+   */
+  event_4 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {
+      mixpanel.track("developer - extension select start", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url,
+        'select_type' : 'list_type'
+      });//eo mixpanel.track
+    }); 
+  },
+  /*
+   * This event is emitted each time the "Select single item" button on the lower left hand corner is clicked
+   */
+  event_5 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension select start", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url,
+        'select_type' : 'single_type'
+      });//eo mixpanel.track
+    }); 
+  }
+};//eo MixpanelEvents

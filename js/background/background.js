@@ -18,6 +18,7 @@ if(window.localStorage && localStorage.getItem('first_install') != 'yes'){
   })();
 };//eo mixpanel
 
+
 /***************************************************************************/
 /*********************  Incoming Request Handler  **************************/
 /***************************************************************************/
@@ -88,7 +89,7 @@ var handleIconClick = function handleIconClick(tab){
      updateBrowserActionIcon();
      isActive = false;
      clearCache();
-
+     MixpanelEvents.event_3();
    }else{
      enableKrake();
      updateBrowserActionIcon();
@@ -97,6 +98,7 @@ var handleIconClick = function handleIconClick(tab){
      sharedKrake = SharedKrake;
      colorGenerator = new ColorGenerator();
      clearCache();
+     MixpanelEvents.event_2();
    }
 
 };//eo handleIconClick

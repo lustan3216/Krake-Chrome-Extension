@@ -1,13 +1,13 @@
 {
    "background": {
-      "scripts": [ "js/libs/mixpanel/mixpanel.js",
-                   "js/libs/jquery/jquery_1.9.1.min.js", 
+      "scripts": [ "js/libs/jquery/jquery_1.9.1.min.js", 
                    "js/background/params.js", 
                    "js/background/sharedkrake_helper.js",
                    "js/background/session_manager.js",
                    "js/background/columns.js",
-                   "js/background/background.js",
-                   "js/background/pattern_matcher.js" ]
+                   "js/background/pattern_matcher.js",
+                   "js/libs/mixpanel/mixpanel.js",
+                   "js/background/background.js" ]
    },
    "browser_action": {
       "default_icon": "images/krake_icon_disabled_24.png",
