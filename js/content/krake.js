@@ -390,7 +390,9 @@ var Panel = {
   },
 
   uiBtnDoneClick : function(){
-    console.log("uiBtnDoneClick");
+    //send mixpanel request
+    KrakeHelper.triggerMixpanelEvent(null, 'event_11');
+
     chrome.extension.sendMessage({ action:'get_krake_json' }, function(response){
       if(response.status == 'success'){
         alert( JSON.stringify(response.krakeDefinition) );

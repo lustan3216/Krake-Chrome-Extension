@@ -151,5 +151,16 @@ var MixpanelEvents = {
         'url_location' : tab.url
       });//eo mixpanel.track
     }); 
+  },
+  /*
+   * This event is emitted each time the done button is clicked
+   */
+  event_11 : function(e){
+    chrome.tabs.getSelected(null, function(tab) {   
+      mixpanel.track("developer - extension done", {
+        'extension_version' : chrome.runtime.getManifest().version,
+        'url_location' : tab.url
+      });//eo mixpanel.track
+    }); 
   }
 };//eo MixpanelEvents
