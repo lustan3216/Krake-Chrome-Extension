@@ -294,7 +294,7 @@ var editCurrentColumn = function(params, callback){
       break;
 
       case 'next_pager':
-      alert("editCurrentColumn.next_pager := " + JSON.stringify(params));
+      //alert("editCurrentColumn.next_pager := " + JSON.stringify(params));
         SharedKrakeHelper.setNextPager(params.values.xpath);
         sessionManager.goToNextState(); //current state := 'idle'
       break;

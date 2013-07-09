@@ -505,7 +505,7 @@ var Panel = {
           
             chrome.extension.sendMessage({ action:'edit_session', params : params}, function(response){
               if(response.status == 'success'){
-                alert('column.genericXpath := ' + column.genericXpath);
+                //alert('column.genericXpath := ' + column.genericXpath);
                 var results = KrakeHelper.evaluateQuery(column.genericXpath);
                 //console.log(results.nodesToHighlight[0].href);
                 window.location.href = results.nodesToHighlight[0].href;
