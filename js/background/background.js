@@ -14,7 +14,17 @@ if(window.localStorage && localStorage.getItem('first_install') != 'yes'){
     });
     //console.log('executed');
     localStorage.setItem('first_install', 'yes');
+    localStorage.setItem('old_extension_version', chrome.runtime.getManifest().version );
     console.log('-- inside first install := ' + localStorage.getItem('first_install'));
+  })();
+}else{
+  (function(){
+    mixpanel.track("developer - extension updated - browser", {
+      'extension_version' : chrome.runtime.getManifest().version,
+      'old_extension_version' : localStorage.getItem('old_extension_version')
+    });
+    localStorage.setItem('old_extension_version', chrome.runtime.getManifest().version );
+    console.log('-- browser extension updated --');
   })();
 };//eo mixpanel
 
