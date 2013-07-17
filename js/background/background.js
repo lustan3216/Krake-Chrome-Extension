@@ -39,6 +39,10 @@ chrome.runtime.onMessage.addListener(
         loadScript(request.params.filename, sender);
       break;
 
+      case "insert_css":
+        insertCss(request.params.filename, sender);
+      break;
+
       case "get_session":
         sendResponse({ session: sessionManager });
       break;
@@ -168,6 +172,14 @@ var loadScript = function(filename, sender){
       });
     });
 };//eo loadScript
+
+var insertCss = function(filename, sender){
+    chrome.tabs.insertCSS(sender.tab.id, {file: filename}, function(){
+      chrome.tabs.sendMessage(sender.tab.id, { action: "insert_css_done", params: { filename: filename } }, function(response){
+        
+      });
+    });
+}
 
 var getKrakeJson = function(callback){
   var json = SharedKrakeHelper.createScrapeDefinitionJSON();

@@ -229,9 +229,6 @@
 }
 
 </style>
-
-
-
 <div class="k_error k_message k_panel"></div>
 <div class="k_warning k_message k_panel"></div>
 <div class="k_success k_message k_panel"></div>
@@ -242,6 +239,19 @@
   <button id="k_option_yes" class="k_option_button k_panel">Yes</button>
   <button id="k_option_no" class="k_option_button k_panel">No</button> 
 </div>
+
+<!-- Button to trigger modal -->
+<a id="show-json" href="#json-output" role="button" class="btn k_panel" data-toggle="modal">Launch demo modal</a>
+
+<div id="json-output" class="modal hide fade k_panel">
+  <div class="modal-header k_panel">
+    <h3 class="k_panel">Modal header</h3>
+  </div>
+  <div class="modal-body k_panel">
+    <p id="json-definition" class="k_panel">One fine body…</p>
+  </div>
+</div>
+
 
 <div id="panel" class="k_panel">
   <div id="panel-top-control" class="k_panel metal linear"></div>

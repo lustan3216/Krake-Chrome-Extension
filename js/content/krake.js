@@ -397,13 +397,20 @@ var Panel = {
   uiBtnDoneClick : function(){
     //send mixpanel request
     KrakeHelper.triggerMixpanelEvent(null, 'event_11');
+    NotificationManager.hideAllMessages();
+    $('#json-output').modal('show');
 
     chrome.extension.sendMessage({ action:'get_krake_json' }, function(response){
       if(response.status == 'success'){
-        alert( JSON.stringify(response.krakeDefinition) );
+
+        $('#json-definition').text(JSON.stringify(response.sharedKrake));
+
+        //alert( JSON.stringify(response.krakeDefinition) );
         console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
       }
     });
+
+
   },
 
   attachEnterKeyEventToColumnTitle : function(columnId){

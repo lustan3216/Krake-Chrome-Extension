@@ -25,14 +25,9 @@ chrome.extension.onMessage.addListener(
           UIElementSelector.init();
           populatePreviousColumns();
           NotificationManager.init();
-          /*
-          NotificationManager.showNotification({
-            type : 'info',
-            title : 'title test',
-            message : 'message test'
-          });
-*/
+
         }//eo if
+
       break;
 
   	}//eo switch
@@ -64,7 +59,9 @@ var showPanel = function(){
     panelWrapper.load(chrome.extension.getURL("html/panel.html"),function(){
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/params.js" } }); 
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake_helper.js" } });   
-        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } });       
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } }); 
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/libs/bootstrap/bootstrap.min.js" } });   
+        chrome.extension.sendMessage({ action: "insert_css", params: { filename: "css/bootstrap.min.css" } });     
       }); 
   }//eo if
   
