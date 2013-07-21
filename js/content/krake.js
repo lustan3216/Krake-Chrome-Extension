@@ -15,6 +15,7 @@
 
   Author:
   Joseph Yang <sirjosephyang@krake.io>
+  Gary Teh <garyjob@krake.io>  
 */
 
 
@@ -184,6 +185,7 @@ var UIColumnFactory = {
                               "\");";
 
     var $deleteButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-delete",
+                                        title: "delete column",
                                         style:  deleteButtonImageUrl });
 
     $deleteButton.bind('click', function(){
@@ -208,6 +210,7 @@ var UIColumnFactory = {
                               "\");";
 
     var $saveButton = $("<button>", { class: "k_panel krake-control-button krake-control-button-save",
+                                      title: "save column",
                                       style:  saveButtonImageUrl });
 
     $saveButton.bind('click', function(){
@@ -298,6 +301,8 @@ var Panel = {
   },
 
   init : function(){
+    jQuery('#panel-left button').tooltip();
+    
     Panel.uiBtnCreateList.bind('click', Panel.uiBtnCreateListClick);
     Panel.uiBtnCreateList.bind('click', {eventNumber: 'event_4'}, KrakeHelper.triggerMixpanelEvent);
     Panel.uiBtnSelectSingle.bind('click', Panel.uiBtnSelectSingleClick);
@@ -338,6 +343,9 @@ var Panel = {
             Panel.uiPanelWrapper.append(UIColumnFactory.createUIColumn('list', newColumnId));
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
             Panel.addBreadCrumbToColumn(newColumnId);
+            
+            $('.krake-control-button-save').tooltip();
+            $('.krake-control-button-delete').tooltip();
             
             NotificationManager.showNotification({
               type : 'info',
@@ -442,7 +450,9 @@ var Panel = {
   showPaginationOption : function(column){
     //show prompt
     NotificationManager.showOptionsYesNo({
-      title: 'Has multiple pages?',
+      title: 'This is page part of a listing?',
+      message: 'Pages belonging to a listing usually have hyperlinks that look like  ' +
+        '<button disabled="disabled"> >> </button> or <button disabled="disabled">Next</button>',
       yesFunction : function(e){
         NotificationManager.hideAllMessages();
         selectNextPager();
@@ -591,9 +601,10 @@ var UIElementSelector = {
   },
 
   mouseOver : function(e){
-    if ($(e.target).is('.k_panel')) return;
+    if ($(e.target).is('.k_panel') || $(e.target).parent('.k_panel').length ) return;
     
     if (this.tagName != 'body'){
+
       this.style.outline = '4px solid #0000A0'; 
     }
     return false; //preventDefault & stopPropogation
@@ -812,21 +823,26 @@ var NotificationManager = {
 
     var notification = "";
 
+    notification = notification +
+                   "<img id=\"k_message_close_button\" class=\"k_panel\" src=\"" + 
+                   chrome.extension.getURL("images/close.png") + 
+                   "\" alt=\"Smiley face\">";
+
     if(params.title)
       notification = notification + "<h3 class=\"k_panel\">" + params.title + "</h3>";
 
     if(params.message)
       notification = notification + "<p class=\"k_panel\">" + params.message + "</p>";
  
-    notification = notification +
-                   "<img id=\"k_message_close_button\" class=\"k_panel\" src=\"" + 
-                   chrome.extension.getURL("images/close.png") + 
-                   "\" alt=\"Smiley face\">";
+
 
     $('.k_'+params.type).html(notification);
 
     $('#k_message_close_button').bind('click', function(e){
       //trigger parent <div> click action
+      coonsole.log('Line 830');
+      $('.k_message').animate({top: -$('.k_message').outerHeight()}, 500);      
+      
     });
 
     $('.k_'+params.type).animate({top:"0"}, 500);

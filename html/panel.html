@@ -15,6 +15,7 @@
 
   Author:
   Joseph Yang <sirjosephyang@krake.io>
+  Gary Teh <garyjob@krake.io>
 -->
 
 <style>
@@ -256,8 +257,14 @@
 <div id="panel" class="k_panel">
   <div id="panel-top-control" class="k_panel metal linear"></div>
   <div id="panel-left" class="k_panel  metal linear">
-    <button type="button" class="k_btn k_panel metal linear" id="btn-create-list">Make a list of items</button>
-    <button type="button" class="k_btn k_panel metal linear" id="btn-select-single">Select single item</button>
+    <button type="button" class="k_btn k_panel metal linear" id="btn-create-list" 
+      title="Suitable for getting a list product prices on a shopping cart product category page">
+      Select a list of items
+    </button>
+    <button type="button" class="k_btn k_panel metal linear" id="btn-select-single" 
+      title="Suitable for getting a single paragraph of text from an article page">
+      Select a single item
+    </button>
 <!--
    <button type="button" class="k_btn k_panel metal linear" id="btn-edit-pagination">Edit pagination</button>
  -->
@@ -265,7 +272,11 @@
     <br/>
     <div class="k_blank-row k_panel"></div>
     <div class="k_blank-row k_panel"></div>
-    <button type="button" class="k_btn k_panel" id="btn-done">Done </button>
+    <button type="button" class="k_btn k_panel" id="btn-done"
+      title="Click when you have created all columns. Krake will start harvesting your data">
+      Done 
+    </button>
+    
   </div>
 
   <div id="panel-right" class="k_panel">

@@ -95,7 +95,7 @@ img.k_highlight_FFFF99
      _position: absolute;
      text-shadow: 0 1px 0 rgba(0,0,0,.5);
      animation: animate-bg 5s linear infinite;
-     z-index : 10000;
+     z-index : 999990;
 }
 
 .k_option{
@@ -155,11 +155,12 @@ img.k_highlight_FFFF99
 
 #k_message_close_button{
   float: right;
-  margin-top: -30px;
+  /* margin-top: -30px; */
   margin-right: 30px;
   min-width:20px;
   min-height:20px;
-  z-index: 10001;
+  z-index: 999991;
+  cursor : pointer;
 }
 
 @keyframes animate-bg {
@@ -169,4 +170,8 @@ img.k_highlight_FFFF99
     to {
        background-position: -80px 0;
     }
+}
+
+.k_panel button[disabled="disabled"] {
+  cursor : default;
 }

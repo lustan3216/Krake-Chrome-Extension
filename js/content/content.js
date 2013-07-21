@@ -53,7 +53,7 @@ var showPanel = function(){
   if(!$('#k-panel-wrapper').isExist()){
     var element = document.createElement('div');
     element.id = "k-panel-wrapper";
-    $('body').append(element); 
+    $('body').prepend(element); 
     var panelWrapper = $('#k-panel-wrapper');
 
     panelWrapper.load(chrome.extension.getURL("html/panel.html"),function(){
