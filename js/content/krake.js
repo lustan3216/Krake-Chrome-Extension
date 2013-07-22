@@ -204,6 +204,8 @@ var UIColumnFactory = {
       });
     });
 
+    $deleteButton.tooltip();    
+
     //save button
     var saveButtonImageUrl = "background-image: url(\"" +
                                chrome.extension.getURL("images/save.png") + 
@@ -222,6 +224,7 @@ var UIColumnFactory = {
           var columnIdentifier = "#krake-column-" + columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';
           $(selector).remove();
+          $('.tooltip').remove();          
           //UIColumnFactory.addEditButton(columnId);
         }else{
           NotificationManager.showNotification({
@@ -232,6 +235,8 @@ var UIColumnFactory = {
         }   
       });
     });
+    
+    $saveButton.tooltip();    
 
     var breadcrumbId = "k_column-breadcrumb-" + columnId;
     var $breadcrumb = $("<div>", { id: breadcrumbId,
@@ -344,9 +349,6 @@ var Panel = {
             Panel.attachEnterKeyEventToColumnTitle(newColumnId);
             Panel.addBreadCrumbToColumn(newColumnId);
             
-            $('.krake-control-button-save').tooltip();
-            $('.krake-control-button-delete').tooltip();
-            
             NotificationManager.showNotification({
               type : 'info',
               title : Params.NOTIFICATION_TITLE_PRE_SELECTION_1,
@@ -411,10 +413,10 @@ var Panel = {
     chrome.extension.sendMessage({ action:'get_krake_json' }, function(response){
       if(response.status == 'success'){
 
-        $('#json-definition').text(JSON.stringify(response.sharedKrake));
-
-        //alert( JSON.stringify(response.krakeDefinition) );
+        //$('#json-definition').text(JSON.stringify(response.sharedKrake));        
         console.log('-- sharedKrake\n' + JSON.stringify(response.sharedKrake));
+        
+        $('#json-definition').text(JSON.stringify(response.krakeDefinition));        
       }
     });
 

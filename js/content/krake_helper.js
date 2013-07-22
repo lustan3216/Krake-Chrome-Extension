@@ -115,11 +115,23 @@ var KrakeHelper =
               if (sibling.nodeName == nodeName)
                   ++index;
           }
-
+          
           var tagName = element.nodeName.toLowerCase();
           //var pathIndex = (index ? "[" + (index+1) + "]" : "");
-          var pathIndex = "[" + (index+1) + "]";
-          paths.splice(0, 0, tagName + pathIndex);
+          
+          // adds iterator for normal nodes
+          if(element.parentNode.tagName != 'BODY') {
+            
+            var pathIndex = "[" + (index+1) + "]";
+            paths.splice(0, 0, tagName + pathIndex);            
+
+          // Remove iterator for direct child of Body Node — causes some hiccups in the engine            
+          } else {
+            
+            paths.splice(0, 0, tagName);
+            
+          }
+
       }
 
       return paths.length ? "/" + paths.join("/") : null;

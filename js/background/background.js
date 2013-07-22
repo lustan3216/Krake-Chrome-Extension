@@ -90,6 +90,10 @@ chrome.runtime.onMessage.addListener(
       case 'get_krake_json':
         getKrakeJson(sendResponse);
       break;
+      
+      case 'inject_krake':
+        injectKrakeJson(sendResponse);      
+      break;
 
       case 'fire_mixpanel_event':
         executeMixpanelEvent(request.params.eventNumber);
@@ -185,7 +189,68 @@ var getKrakeJson = function(callback){
   var json = SharedKrakeHelper.createScrapeDefinitionJSON();
   if (callback && typeof(callback) === "function")  
       callback({status: 'success', krakeDefinition: json, sharedKrake: SharedKrake });
+  
+  sendKrakeToApp();
 };//eo getKrakeJson
+
+
+/* 
+ *  @Description : returns the Krake definition without additional action
+ */
+var injectKrakeJson = function(callback){
+  var json = SharedKrakeHelper.createScrapeDefinitionJSON();
+  if (callback && typeof(callback) === "function")  
+      callback({status: 'success', krakeDefinition: json, sharedKrake: SharedKrake });
+  
+};//eo getKrakeJson
+
+
+
+/* 
+ *  @Description : Creates a new Tab to location https://krake.io/krakes/new
+ *    when the Done button is clicked on the front end
+ */
+var sendKrakeToApp = function() {
+  checkKrakeCookies(function(is_logged_in) {
+    if(is_logged_in) {
+      chrome.tabs.create({'url': 'https://krake.io/krakes/new' }, function(tab) {
+        // Tab opened.
+        console.log(tab)
+      });
+    } else {
+      chrome.tabs.create({'url': 'https://krake.io/members/sign_in?ext_login=true' }, function(tab) {
+        // Tab opened.
+        console.log(tab)
+      });      
+    }
+    
+  })
+}
+
+
+/*
+ *  @Description : Checks if the following two cookies on Krake.IO exist
+ *      _mbd_dev_session
+ *      remember_member_token
+ *  @param callback( cookie_exist:boolean )
+ */
+var checkKrakeCookies = function(callback) {
+  chrome.cookies.get({"url": 'https://krake.io', "name": '_mbd_dev_session'}, function(cookie) {
+    if(cookie) {
+      callback(true);
+    } else {
+      chrome.cookies.get({"url": 'https://krake.io', "name": '  remember_member_token'}, function(cookie) {
+        if(cookie) {
+          callback(true);
+        } else {
+          callback(false);          
+        }        
+      });
+    }
+  });  
+}
+
+
 
 /*
  * @Param: params:object { attribute:"xpath_1", values:params } 

@@ -222,7 +222,7 @@ var SharedKrakeHelper = {
       }//eo switch
 
     }//eo for
-
+    
     return krakeJson;
   },//eo createScrapeDefinitionJSON
 

@@ -48,9 +48,14 @@ Column.prototype.setSelection1 = function(params){
 
   var elementType = params.elementType.toLowerCase();
 
-  if(elementType == "a")
-    self.requiredAttribute = "href";
-
+  /* 
+    // Disabled for easier demonstration purposes
+    // To consider splitting into two different logical columns
+    
+    if(elementType == "a")
+      self.requiredAttribute = "href";
+  */
+  
   if(elementType == "img")
     self.requiredAttribute = "src";
   

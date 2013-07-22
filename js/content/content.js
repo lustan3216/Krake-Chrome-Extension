@@ -8,8 +8,10 @@ chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
   	switch(request.action){
       case "enable_krake":
-        showPanel();
-        console.log("enable_krake");
+        if(document.domain != 'krake.io') {      
+          showPanel();
+          console.log("enable_krake");
+        }
 
       break;
 
@@ -37,11 +39,29 @@ var param = {
   currentUrl : document.URL
 }
 
-chrome.extension.sendMessage({ action:'edit_session', params: { attribute:'previous_column', values:param }}, function(response){
-  if(response.status == 'success'){
-    console.log('-- edit_session');
-  }
-});
+// Checks the current domain loaded and activates different mode
+if(document.domain != 'krake.io') {
+  
+  chrome.extension.sendMessage({ action:'edit_session', params: { attribute:'previous_column', values:param }}, function(response){
+    if(response.status == 'success'){
+      console.log('-- edit_session');
+    }
+  });  
+  
+} else if (document.domain == 'krake.io' && document.location.pathname == '/krakes/new') { // injects Krake Def
+
+  chrome.extension.sendMessage({ action:'inject_krake' }, function(response){
+    if(response.status == 'success'){
+      console.log(response)
+      $('#krake_content').html(JSON.stringify(response.krakeDefinition));
+    }
+  });
+
+} else if (document.domain == 'krake.io' && document.location.pathname == '/loggedin-via-extension') { // redirect
+  
+  document.location = 'https://krake.io/krakes/new'
+  
+}
 
 
 $.fn.isExist = function(){
