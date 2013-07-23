@@ -41,6 +41,66 @@
 })(document, window.mixpanel || []);
 mixpanel.init("6739c9644606bc42c8ac134c22e1d691");
 
+// Unique user identity across web application and browser extension
+setup_mixpanel_muuid = function() {
+  console.log('Setting up muuid');
+  chrome.cookies.get({"url": 'https://krake.io', "name": 'muuid'}, function(cookie) {
+    if(cookie) {
+
+      mixpanel.identify(cookie.value);
+      console.log('MUUID : %s', cookie.value)
+
+      /***************************************************************************/
+      /******************************  MixPanel **********************************/
+      /***************************************************************************/
+      if(window.localStorage && localStorage.getItem('first_install') != 'yes'){
+        (function(){
+          mixpanel.track("developer - extension installed - browser", {
+            'extension_version' : chrome.runtime.getManifest().version
+          });
+          //console.log('executed');
+          localStorage.setItem('first_install', 'yes');
+          localStorage.setItem('old_extension_version', chrome.runtime.getManifest().version );
+          console.log('-- inside first install := ' + localStorage.getItem('first_install'));
+        })();
+      }else{
+        (function(){
+          mixpanel.track("developer - extension updated - browser", {
+            'extension_version' : chrome.runtime.getManifest().version,
+            'old_extension_version' : localStorage.getItem('old_extension_version')
+          });
+          localStorage.setItem('old_extension_version', chrome.runtime.getManifest().version );
+          console.log('-- browser extension updated --');
+        })();
+      };//eo mixpanel      
+    } else {
+      setup_muuid_frame();
+    }
+
+  });
+};
+
+
+// Ensures the muuid cookie is set
+setup_muuid_frame = function() {
+  console.log('Loading Krake.IO iframe');
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://krake.io/muuid", true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4) {
+      console.log('Loaded Krake.IO iframe');
+      setup_mixpanel_muuid();    
+    }
+  }
+  xhr.send();  
+
+
+
+};
+
+console.log('Mixpanel 101');
+setup_mixpanel_muuid();
+
 
 /***************************************************************************/
 /******************************  MixPanel **********************************/
