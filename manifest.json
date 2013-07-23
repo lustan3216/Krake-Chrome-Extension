@@ -19,6 +19,7 @@
       "css": [ "css/content.css"], 
       "js": [ "js/libs/jquery/jquery_1.9.1.min.js", 
               "js/libs/jquery/jquery_ui_1.10.3.js", 
+              "js/content/behavioral_mode.js",
               "js/content/content.js" ],
       "matches": [ "http://*/*", "https://*/*" ],
       "run_at": "document_end"

@@ -3,6 +3,7 @@
 
 var panel = null;
 var elementUIManager = null;
+var behavioral_mode = DEFAULT_MODE;
 
 chrome.extension.onMessage.addListener(
   function(request, sender, sendResponse){
@@ -41,15 +42,25 @@ var param = {
 
 // Checks the current domain loaded and activates different mode
 if(document.domain != 'krake.io') {
-  
+  behavioral_mode = DEFAULT_MODE;
   chrome.extension.sendMessage({ action:'edit_session', params: { attribute:'previous_column', values:param }}, function(response){
     if(response.status == 'success'){
       console.log('-- edit_session');
     }
-  });  
-  
-} else if (document.domain == 'krake.io' && document.location.pathname == '/krakes/new') { // injects Krake Def
+  });
 
+} else if (document.domain == 'krake.io' && document.location.pathname == '/tutorial') { // A tutorial on how to use browser ext
+  
+  behavioral_mode = TUTORIAL_MODE;
+  chrome.extension.sendMessage({ action:'edit_session', params: { attribute:'previous_column', values:param }}, function(response){
+    if(response.status == 'success'){
+      console.log('-- edit_session');
+    }
+  });
+
+} else if (document.domain == 'krake.io' && document.location.pathname == '/krakes/new') { // injects Krake Def
+  
+  behavioral_mode = CREATION_MODE;
   chrome.extension.sendMessage({ action:'inject_krake' }, function(response){
     if(response.status == 'success'){
       console.log(response)
