@@ -77,6 +77,24 @@ chrome.runtime.onMessage.addListener(
     }//eo switch
   });
 
+// @Description : handles page reload event
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
+  //re-render panel using columns objects from storage if any. 
+  if(isActive){
+    //Remove column that is not done editing from sessionManager
+    sessionManager.currentState = "idle";
+    sessionManager.currentColumn = null;
+
+    chrome.tabs.sendMessage(tabId, { action : "enable_krake"}, function(response){
+      isActive = true;
+      console.log("isActive: " + isActive);
+    });
+  }//eo if
+});
+
+// @Description : Listens for button click event
+chrome.browserAction.onClicked.addListener(handleIconClick);
+
 /***************************************************************************/
 /************************  Browser Action Icon  ****************************/
 /***************************************************************************/
@@ -106,9 +124,6 @@ var updateBrowserActionIcon = function(tab){
     chrome.browserAction.setIcon({path:"images/krake_icon_24.png"}); 
 };//eo updateBrowserActionIcon
 
-
-chrome.browserAction.onClicked.addListener(handleIconClick);
-
 /***************************************************************************/
 /**************************** Action Methods  ******************************/
 /***************************************************************************/
@@ -129,21 +144,6 @@ var clearCache = function(){
   SharedKrake.reset();
   var sessionManager = null;
 };
-
-
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-  //re-render panel using columns objects from storage if any. 
-  if(isActive){
-    //Remove column that is not done editing from sessionManager
-    sessionManager.currentState = "idle";
-    sessionManager.currentColumn = null;
-
-    chrome.tabs.sendMessage(tabId, { action : "enable_krake"}, function(response){
-      isActive = true;
-      console.log("isActive: " + isActive);
-    });
-  }//eo if
-});
 
 var loadScript = function(filename, sender){
     chrome.tabs.executeScript(sender.tab.id, {file: filename}, function(){
