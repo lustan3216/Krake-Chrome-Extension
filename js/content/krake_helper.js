@@ -9,6 +9,7 @@ var KrakeHelper =
     chrome.extension.sendMessage({ action: "fire_mixpanel_event", 
                                    params: { eventNumber : _eventNumber } });
   },//eo mixpanel
+  
   /*
    * @Return: { text:string, nodeCount:string, nodesToHighlight:array }
    */

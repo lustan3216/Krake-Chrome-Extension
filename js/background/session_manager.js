@@ -78,14 +78,14 @@ SessionManager.prototype.setEventForState = function(state, eventHandler){
 SessionManager.prototype.goToNextState = function(state){
   var self = this;
 
-  if(!state){
+  if(!state) {
     var previousState = self.states[self.currentState];
     self.currentState = previousState['after'];
 
-    if(previousState['post_transition_event'] != undefined){
+    if(previousState['post_transition_event'] != undefined) {
       (previousState['post_transition_event'])();
     }
-  }else{
+  } else {
     self.currentState = state;
   }//eo if-else
 

@@ -61,6 +61,10 @@ Column.prototype.setSelection1 = function(params){
   
 };
 
+/*
+ * @Description: validate column before saving into sharedKrake
+ * @Return: true => validataion passed, false => validation failed
+ */
 Column.prototype.setSelection2 = function(params){
   var self = this;
   self.selection2.xpath = params.xpath;
@@ -90,7 +94,10 @@ Column.prototype.validate = function(){
 };
 
 
-/****************************************************************************************/
+/*
+ * @Description : Rotates through a list of color and returns a new color each time
+ *    the getColor() is called
+ */
 var ColorGenerator = function()
 {
   this.colorArray = 
@@ -112,6 +119,11 @@ var ColorGenerator = function()
 
 };//eo ColorGenerator
 
+/*
+ *  @Description : Returns a color code from the colorArray
+ *    Auto rotates the most recent color returned to the end of the array after its been returned for use
+ *  @return : color:String
+ */
 
 ColorGenerator.prototype.getColor = function()
 {

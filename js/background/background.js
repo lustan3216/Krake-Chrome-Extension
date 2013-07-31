@@ -23,8 +23,8 @@ chrome.runtime.onMessage.addListener(
         sendResponse({ session: sessionManager });
       break;
 
-      case 'edit_session':
-        editSession(request.params, sendResponse);
+      case 'load_session':
+        loadSession(request.params, sendResponse);
       break;
 
       case 'get_shared_krake':
@@ -81,13 +81,13 @@ chrome.runtime.onMessage.addListener(
 /************************  Browser Action Icon  ****************************/
 /***************************************************************************/
 var handleIconClick = function handleIconClick(tab){
-   if(isActive){
+   if(isActive) {
      disableKrake();
      updateBrowserActionIcon();
      isActive = false;
      clearCache();
      MixpanelEvents.event_3();
-   }else{
+   } else {
      enableKrake();
      updateBrowserActionIcon();
      isActive = true;
@@ -226,29 +226,24 @@ var checkKrakeCookies = function(callback) {
   });  
 }
 
-
-
 /*
  * @Param: params:object { attribute:"xpath_1", values:params } 
  */
-var editSession = function(params, callback){
-  try{    
-    console.log('-- before "editSession"');
+var loadSession = function(params, callback){
+  try{
+    console.log('-- before "loadSession"');
     console.log('session\n' + JSON.stringify(sessionManager));
     console.log('params\n' + JSON.stringify(params));
-   
-    switch(params.attribute){
+    
+    switch(params.attribute) {
       case 'previous_column':
-      //alert("editSession.previous_column");
-        if(params.event == 'detail_link_clicked'){
-          console.log('if');
-          //sessionManager.previousColumn = sessionManager.currentColumn;
+      
+        if(params.event == 'detail_link_clicked') {
           var previousColumn = SharedKrakeHelper.findColumnByKey('columnId', params.columnId);
 
-        }else{
-          console.log('else');
+        // When in top level page
+        } else {
           var column = SharedKrakeHelper.findColumnByKey('elementLink', params.values.currentUrl);
-          console.log( JSON.stringify(column) );
           if(column)
             sessionManager.previousColumn = SharedKrakeHelper.findColumnByKey('parentColumnId', column.parentColumnId);
         }
@@ -259,16 +254,17 @@ var editSession = function(params, callback){
       break;
     }//eo switch
     
-    console.log('-- after "editSession"');
+    console.log('-- after "loadSession"');
     console.log( JSON.stringify(sessionManager) );
 
     if (callback && typeof(callback) === "function")  
       callback({status: 'success', session: sessionManager}); 
-  }catch(err){
+      
+  } catch(err) {
     console.log(err);
     if (callback && typeof(callback) === "function")  callback({status: 'error'});
   }
-};//eo editSession
+};//eo loadSession
 
 var newColumn = function(params, callback){
   try{
@@ -470,6 +466,7 @@ var getBreadcrumb = function(params, callback){
   } 
 };//eo getBreadcrumb
 
+// @Description : MixPanel events
 var executeMixpanelEvent = function(eventNumber, callback){
   switch(eventNumber){
     case 'event_4':
