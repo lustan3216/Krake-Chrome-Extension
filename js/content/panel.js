@@ -42,9 +42,9 @@ var Panel = {
     
     Panel.behavioral_mode = behavioral_mode;    
     Panel.uiBtnCreateList.bind('click', Panel.uiBtnCreateListClick);
-    Panel.uiBtnCreateList.bind('click', {eventNumber: 'event_4'}, KrakeHelper.triggerMixpanelEvent);
+    Panel.uiBtnCreateList.bind('click', {eventNumber: 'event_4'}, MixPanelHelper.triggerMixpanelEvent);
     Panel.uiBtnSelectSingle.bind('click', Panel.uiBtnSelectSingleClick);
-    Panel.uiBtnSelectSingle.bind('click', {eventNumber: 'event_5'}, KrakeHelper.triggerMixpanelEvent);
+    Panel.uiBtnSelectSingle.bind('click', {eventNumber: 'event_5'}, MixPanelHelper.triggerMixpanelEvent);
     Panel.uiBtnEditPagination.bind('click', Panel.uiBtnEditPaginationClick);
     Panel.uiBtnDone.bind('click', Panel.uiBtnDoneClick);
 
@@ -145,7 +145,7 @@ var Panel = {
 
   uiBtnDoneClick : function(){
     //send mixpanel request
-    KrakeHelper.triggerMixpanelEvent(null, 'event_11');
+    MixPanelHelper.triggerMixpanelEvent(null, 'event_11');
     NotificationManager.hideAllMessages();
     $('#json-output').modal('show');
 
@@ -270,7 +270,7 @@ var Panel = {
             chrome.extension.sendMessage({ action:'edit_session', params : params}, function(response){
               if(response.status == 'success'){
                 //alert('column.genericXpath := ' + column.genericXpath);
-                var results = KrakeHelper.evaluateQuery(column.genericXpath);
+                var results = XpathHelper.evaluateQuery(column.genericXpath);
                 //console.log(results.nodesToHighlight[0].href);
                 window.location.href = results.nodesToHighlight[0].href;
               } 

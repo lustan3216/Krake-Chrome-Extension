@@ -60,30 +60,46 @@ var UIElementSelector = {
     UIElementSelector.detachElementHighlightListeners();
   },
 
+  // @Description : Gets and sets the element Xpath to session when a click event occurs
   selectElement : function(e){
     e.preventDefault();
     e.stopPropagation();
 
     if ($(e.target).is('.k_panel')) return;
-
-    var elementPathResult = KrakeHelper.getElementXPath(this); 
-    var elementText = KrakeHelper.evaluateQuery(elementPathResult.xpath).text;
-
-    var params = {
-      xpath : elementPathResult.xpath,
-      elementType : elementPathResult.nodeName,
-      elementText : elementText,
-      elementLink : elementPathResult.link
-    };
-  
+    
+    var self = this;
+      
     chrome.extension.sendMessage({ action: 'get_session'}, function(response){
       var sessionManager = response.session;
       //console.log("--");
       //console.log(JSON.stringify(sessionManager));
       
-      switch(sessionManager.currentState){
-        case 'pre_next_pager_selection':
+      // TODO : determine the element to map to depending on state when given a sessionManager.currenState
+      if(sessionManager.currentState == 'pre_next_pager_selection') {
+        selected_dom_element = XpathHelper.findUpTag(self, 'A');
+        
+      } else {
+        selected_dom_element = self;
 
+      }
+
+      var elementPathResult = XpathHelper.getElementXPath(selected_dom_element);
+      var elementText = XpathHelper.evaluateQuery(elementPathResult.xpath).text;
+
+      var params = {
+        xpath : elementPathResult.xpath,
+        elementType : elementPathResult.nodeName,
+        elementText : elementText,
+        elementLink : elementPathResult.link
+      };      
+      
+      
+      switch(sessionManager.currentState){
+        case 'pre_next_pager_selection' :
+          
+          console.log('Line 99');
+          console.log(params);
+          
           chrome.extension.sendMessage({ action:'edit_current_column', params: { attribute:'next_pager', values:params}}, function(response){
             UIElementSelector.mode = 'select_element';
             console.log('-- select next Pager');
@@ -93,7 +109,7 @@ var UIElementSelector = {
           });
         break;
 
-        case 'pre_selection_1':
+        case 'pre_selection_1' :
 
           chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_1", values:params }}, function(response){
             if(response.status == 'success'){
@@ -103,7 +119,7 @@ var UIElementSelector = {
 
               if(sessionManager.currentColumn.columnType == 'list'){
                 //send mixpanel request
-                KrakeHelper.triggerMixpanelEvent(null, 'event_6');
+                MixPanelHelper.triggerMixpanelEvent(null, 'event_6');
                 //show notification 
                 NotificationManager.showNotification({
                   type : 'info',
@@ -112,7 +128,7 @@ var UIElementSelector = {
                 });
               }else if(sessionManager.currentColumn.columnType == 'single'){
                 //send mixpanel request
-                KrakeHelper.triggerMixpanelEvent(null, 'event_8');
+                MixPanelHelper.triggerMixpanelEvent(null, 'event_8');
 
                 chrome.extension.sendMessage({ action:"match_pattern" }, function(response){
                   console.log( JSON.stringify(response) );
@@ -130,7 +146,7 @@ var UIElementSelector = {
           });
         break;
 
-        case 'pre_selection_2':
+        case 'pre_selection_2' :
           console.log('pre_selection_2');
 
           chrome.extension.sendMessage({ action: "get_session" }, function(response){
@@ -143,7 +159,7 @@ var UIElementSelector = {
             chrome.extension.sendMessage({ action:"edit_current_column", params: { attribute:"xpath_2", values:params }}, function(response){
               if(response.status == 'success'){
                 //send mixpanel request
-                KrakeHelper.triggerMixpanelEvent(null, 'event_7');
+                MixPanelHelper.triggerMixpanelEvent(null, 'event_7');
 
                 var sessionManager = response.session;
                 UIElementSelector.updateColumnText(sessionManager.currentColumn.columnId, 2, elementText, elementPathResult.nodeName);
@@ -181,7 +197,7 @@ var UIElementSelector = {
     console.log(url + '\n' + genericXpath + '\n' + colorCode);
     if(document.URL != url) return;
     
-    var result = KrakeHelper.evaluateQuery(genericXpath);
+    var result = XpathHelper.evaluateQuery(genericXpath);
     var nodes = result.nodesToHighlight;
     
     for(var i=0; i<nodes.length; i++){

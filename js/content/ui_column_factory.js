@@ -63,6 +63,7 @@ var UIColumnFactory = {
     
     var $detailPageLink = null;
 
+    // hyperlink incon in the column in case of hyperlink
     if(elementLink)
     {
       var selector = '#krake-column-control-' + columnId;
@@ -145,7 +146,7 @@ var UIColumnFactory = {
 
     $deleteButton.bind('click', function(){
       //send mixpanel request
-      KrakeHelper.triggerMixpanelEvent(null, 'event_10');
+      MixPanelHelper.triggerMixpanelEvent(null, 'event_10');
 
       NotificationManager.hideAllMessages();
 
@@ -193,7 +194,7 @@ var UIColumnFactory = {
 
     $deleteButton.bind('click', function(){
       //send mixpanel request
-      KrakeHelper.triggerMixpanelEvent(null, 'event_10');
+      MixPanelHelper.triggerMixpanelEvent(null, 'event_10');
 
       NotificationManager.hideAllMessages();
 
@@ -222,7 +223,7 @@ var UIColumnFactory = {
       chrome.extension.sendMessage({ action: "save_column" }, function(response){
         if(response.status == 'success'){
           //send mixpanel request
-          KrakeHelper.triggerMixpanelEvent(null, 'event_9');
+          MixPanelHelper.triggerMixpanelEvent(null, 'event_9');
 
           var columnIdentifier = "#krake-column-" + columnId; 
           var selector = columnIdentifier + ' .krake-control-button-save';

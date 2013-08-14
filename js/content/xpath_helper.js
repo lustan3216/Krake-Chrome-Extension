@@ -1,4 +1,4 @@
-var KrakeHelper = 
+var XpathHelper = 
 {
   triggerMixpanelEvent : function(e, eventNumber){
     var _eventNumber = e? e.data.eventNumber : eventNumber;
@@ -86,8 +86,8 @@ var KrakeHelper =
     {
       var nodename = element.nodeName.toLowerCase();
       var link = nodename=="a"? element.href : nodename=="img"? element.src : null;
-      //return [element.nodeName, KrakeHelper.getElementTreeXPath(element), link];
-      var xpath = KrakeHelper.getElementTreeXPath(element);
+      //return [element.nodeName, XpathHelper.getElementTreeXPath(element), link];
+      var xpath = XpathHelper.getElementTreeXPath(element);
       return {
                nodeName : element.nodeName,
                xpath : xpath,
@@ -136,7 +136,27 @@ var KrakeHelper =
       }
 
       return paths.length ? "/" + paths.join("/") : null;
+  },
+  
+  // @Description : given an element gets its first ancestor that has the occuring tag match
+  // @param : dom_element:Object
+  // @param : tag:String
+  //    — Example : A, DIV, TR, TD
+  // @return : parent_element:Object
+  findUpTag : function(dom_element, tag) {
+    if (dom_element.tagName === tag)
+        return dom_element;
+        
+    while (dom_element.parentNode) {
+        dom_element = dom_element.parentNode;
+        if (dom_element.tagName === tag)
+            return dom_element;
+    }
+    
+    return null;
+    
   }
+  
 
-};//eo KrakeHelper
+};//eo XpathHelper
 

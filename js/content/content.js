@@ -29,14 +29,15 @@ var showPanel = function(){
 
     panelWrapper.load(chrome.extension.getURL("html/panel.html"),function(){
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/params.js" } }); 
-        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake_helper.js" } });   
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/xpath_helper.js" } });
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/mixpanel_helper.js" } });
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/ui_element_selector.js" } });          
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/ui_column_factory.js" } });   
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/panel.js" } });         
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/notification_manager.js" } });         
-        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } }); 
         chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/libs/bootstrap/bootstrap.min.js" } });   
         chrome.extension.sendMessage({ action: "insert_css", params: { filename: "css/bootstrap.min.css" } });     
+        chrome.extension.sendMessage({ action: "load_script", params: { filename: "js/content/krake.js" } });        
       }); 
   }//eo if
   
@@ -82,7 +83,6 @@ var populateColumns = function(wrapper, columns){
     //elementUIManager.evaluateXpath(columns[i]); //highlight columns
   }
 };
-
 
 // @Description : Handles calls from the background script
 chrome.extension.onMessage.addListener(
